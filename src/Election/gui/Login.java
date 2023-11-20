@@ -11,6 +11,8 @@ import javax.swing.JOptionPane;
 import Election.wallet.User;
 import java.util.Arrays;
 import javax.swing.JFileChooser;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  *
@@ -23,6 +25,8 @@ public class Login extends javax.swing.JFrame {
      */
     public Login() {
         initComponents();
+        this.setLocationRelativeTo(null);
+        createUsersDirectory();
     }
 
     /**
@@ -35,163 +39,191 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         jFileChooser1 = new javax.swing.JFileChooser();
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jPanel1 = new javax.swing.JPanel();
-        txtPassword = new javax.swing.JPasswordField();
-        btLogin = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        txtprivkey = new javax.swing.JLabel();
-        jPanel2 = new javax.swing.JPanel();
-        jPanel3 = new javax.swing.JPanel();
-        txtRegisterName = new javax.swing.JTextField();
-        txtRegisterPassword1 = new javax.swing.JPasswordField();
-        txtRegisterPassword2 = new javax.swing.JPasswordField();
-        btRegister = new javax.swing.JButton();
+        btAdministracao = new javax.swing.JButton();
+        btLogin1 = new javax.swing.JButton();
+        btRegister1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setMinimumSize(new java.awt.Dimension(336, 500));
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtPassword.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtPassword.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
-
-        btLogin.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
-        btLogin.setText("Login");
-        btLogin.addActionListener(new java.awt.event.ActionListener() {
+        btAdministracao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
+        btAdministracao.setText("Administração");
+        btAdministracao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btLoginActionPerformed(evt);
+                btAdministracaoActionPerformed(evt);
             }
         });
+        getContentPane().add(btAdministracao, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 190, 80));
 
-        jButton1.setText("Select private key");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btLogin1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
+        btLogin1.setText("Login");
+        btLogin1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btLogin1ActionPerformed(evt);
             }
         });
+        getContentPane().add(btLogin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 190, 80));
 
-        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
-        jPanel1.setLayout(jPanel1Layout);
-        jPanel1Layout.setHorizontalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(txtPassword)
-                    .addComponent(btLogin, javax.swing.GroupLayout.DEFAULT_SIZE, 324, Short.MAX_VALUE))
-                .addContainerGap())
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(14, 14, 14)
-                .addComponent(jButton1)
-                .addGap(18, 18, 18)
-                .addComponent(txtprivkey, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-        );
-        jPanel1Layout.setVerticalGroup(
-            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(29, 29, 29)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton1)
-                    .addComponent(txtprivkey, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(47, 47, 47)
-                .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, 82, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btLogin, javax.swing.GroupLayout.PREFERRED_SIZE, 134, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(86, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Login", jPanel1);
-
-        jPanel3.setLayout(new java.awt.GridLayout(3, 0, 0, 10));
-
-        txtRegisterName.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterName.setBorder(javax.swing.BorderFactory.createTitledBorder("User Name"));
-        jPanel3.add(txtRegisterName);
-
-        txtRegisterPassword1.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterPassword1.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
-        jPanel3.add(txtRegisterPassword1);
-
-        txtRegisterPassword2.setFont(new java.awt.Font("Courier New", 0, 24)); // NOI18N
-        txtRegisterPassword2.setBorder(javax.swing.BorderFactory.createTitledBorder("Password"));
-        jPanel3.add(txtRegisterPassword2);
-
-        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/register.png"))); // NOI18N
-        btRegister.setText("Register");
-        btRegister.addActionListener(new java.awt.event.ActionListener() {
+        btRegister1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
+        btRegister1.setText("Registo");
+        btRegister1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRegisterActionPerformed(evt);
+                btRegister1ActionPerformed(evt);
             }
         });
-
-        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
-        jPanel2.setLayout(jPanel2Layout);
-        jPanel2Layout.setHorizontalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jPanel3, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(btRegister, javax.swing.GroupLayout.DEFAULT_SIZE, 330, Short.MAX_VALUE)))
-        );
-        jPanel2Layout.setVerticalGroup(
-            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(27, 27, 27)
-                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, 229, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btRegister, javax.swing.GroupLayout.PREFERRED_SIZE, 127, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(18, Short.MAX_VALUE))
-        );
-
-        jTabbedPane1.addTab("Register", jPanel2);
-
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
+        getContentPane().add(btRegister1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 190, 80));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+    public static void createUsersDirectory() {
+        String currentDirectoryPath = System.getProperty("user.dir");
+        String usersDirectoryPath = currentDirectoryPath + File.separator + "users";
 
-    private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
-        try {
-            String name = txtRegisterName.getText();
-            String pw1 = new String(txtRegisterPassword1.getPassword());
-            String pw2 = new String(txtRegisterPassword2.getPassword());
-            if(!name.isBlank() && pw1.equals(pw2)){
-                User u = new User(name);
-                u.save(pw1);
+        File usersDirectory = new File(usersDirectoryPath);
+
+        if (!usersDirectory.exists()) {
+            usersDirectory.mkdirs();
+        }
+    }
+
+     private void handleCreateUser() {
+        JTextField nameField = new JTextField();
+        JPasswordField passwordField1 = new JPasswordField();
+        JPasswordField passwordField2 = new JPasswordField();
+
+        int result = JOptionPane.showConfirmDialog(
+                this,
+                new Object[]{"Name:", nameField, "Password:", passwordField1, "Confirm Password:", passwordField2},
+                "Create User",
+                JOptionPane.OK_CANCEL_OPTION,
+                JOptionPane.PLAIN_MESSAGE
+        );
+
+        if (result == JOptionPane.OK_OPTION) {
+            String name = nameField.getText();
+            String pw1 = new String(passwordField1.getPassword());
+            String pw2 = new String(passwordField2.getPassword());
+
+            if (!name.isBlank() && pw1.equals(pw2) && !pw1.isBlank()) {
+                //Criar o user
+                User u;
+                try {
+                    u = new User(name);
+                    u.save(pw1);
+                } catch (Exception ex) {
+                    Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                }
+
+            } else {
+                if(name.isBlank()){
+                    JOptionPane.showMessageDialog(this, "Input invvalido. Por favor verifique o nome.");
+                }else if(!pw1.equals(pw2)){
+                    JOptionPane.showMessageDialog(this, "Input invvalido. Por favor verifique as passwords.");
+
+                }else if(pw1.isBlank() || pw2.isBlank()){
+                    JOptionPane.showMessageDialog(this, "Input invvalido. Passwords não podem ser vazias.");
+                }else{
+                    JOptionPane.showMessageDialog(this, "Input invvalido. Por favor verifique os dados.");
+                }
             }
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
         }
+    }
+    
+    
+    private void btAdministracaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAdministracaoActionPerformed
+        // TODO add your handling code here:
+        User user = handleLogin();
+        this.setVisible(false);
+        new Administration(user).setVisible(true);
+    }//GEN-LAST:event_btAdministracaoActionPerformed
 
-    }//GEN-LAST:event_btRegisterActionPerformed
-
-    private void btLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLoginActionPerformed
-        try {
-            String pw = new String(txtPassword.getPassword());
-            User user = User.loadUser(txtprivkey.getText(),pw);
-            System.out.println("Able to decode file!");
-            this.setVisible(false);
-             new ElectionGUI(user).setVisible(true);
-        } catch (Exception ex) {
-            Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
-        }
+    private User handleLogin() {
+        //Criar um FileChooser para a Priv Key
+        JFileChooser fileChooser = new JFileChooser();
         
-    }//GEN-LAST:event_btLoginActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        //Create a file chooser
-        JFileChooser fc = new JFileChooser();
+        //Obter o diretorio atual
+        String usersDirectory = System.getProperty("user.dir") + "/users";
+        fileChooser.setCurrentDirectory(new File(usersDirectory));
         
-         int returnVal = fc.showOpenDialog(this);
-
-        if (returnVal == JFileChooser.APPROVE_OPTION) {
-            File file = fc.getSelectedFile();
-            //This is where a real application would open the file.
-            System.out.println("Opening: " + file.getName());
-            txtprivkey.setText(file.getName());
+        //Inicializar a escolha de ficheiro no diretorio atual
+        int result = fileChooser.showOpenDialog(this);
+        
+        //O sistema só reaje se for escolhido um ficheiro
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
             
+            String pw = askForPassword(selectedFile);
+            User user;
+            try {
+                user = User.loadUser(selectedFile.getPath(),pw);
+                System.out.println("Able to decode file!");
+                return user;
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+        return null;
+    }
+
+    private void handleAdministracao() {
+        //Criar um FileChooser para a Priv Key
+        JFileChooser fileChooser = new JFileChooser();
+        
+        //Obter o diretorio atual
+        String usersDirectory = System.getProperty("user.dir") + "/users";
+        fileChooser.setCurrentDirectory(new File(usersDirectory));
+        
+        //Inicializar a escolha de ficheiro no diretorio atual
+        int result = fileChooser.showOpenDialog(this);
+        
+        //O sistema só reaje se for escolhido um ficheiro
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            
+            String pw = askForPassword(selectedFile);
+            User user;
+            try {
+                user = User.loadUser(selectedFile.getPath(),pw);
+                System.out.println("Able to decode file!");
+                this.setVisible(false);
+                new Voting(user).setVisible(true);
+            } catch (Exception ex) {
+                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
+
+    
+    private String askForPassword(File selectedFile) {
+        JPasswordField passwordField = new JPasswordField();
+        int result = JOptionPane.showConfirmDialog(this, passwordField, "Enter Password",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+        if (result == JOptionPane.OK_OPTION) {
+            char[] passwordChars = passwordField.getPassword();
+            String password = new String(passwordChars);
+
+            // Aqui você pode realizar as operações necessárias com o arquivo e senha
+            System.out.println("Selected File: " + selectedFile.getAbsolutePath());
+            System.out.println("Password: " + password);
+            return password;
+        }
+        return "";
+    }
+        
+    private void btLogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLogin1ActionPerformed
+        // TODO add your handling code here:
+        User user = handleLogin();
+        this.setVisible(false);
+        new Voting(user).setVisible(true);
+        
+    }//GEN-LAST:event_btLogin1ActionPerformed
+
+    private void btRegister1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegister1ActionPerformed
+        // TODO add your handling code here:
+        handleCreateUser();
+    }//GEN-LAST:event_btRegister1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,19 +255,11 @@ public class Login extends javax.swing.JFrame {
         });
     }
 
+    
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btLogin;
-    private javax.swing.JButton btRegister;
-    private javax.swing.JButton jButton1;
+    private javax.swing.JButton btAdministracao;
+    private javax.swing.JButton btLogin1;
+    private javax.swing.JButton btRegister1;
     private javax.swing.JFileChooser jFileChooser1;
-    private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel jPanel2;
-    private javax.swing.JPanel jPanel3;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JPasswordField txtPassword;
-    private javax.swing.JTextField txtRegisterName;
-    private javax.swing.JPasswordField txtRegisterPassword1;
-    private javax.swing.JPasswordField txtRegisterPassword2;
-    private javax.swing.JLabel txtprivkey;
     // End of variables declaration//GEN-END:variables
 }

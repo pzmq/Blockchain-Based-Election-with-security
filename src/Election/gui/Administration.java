@@ -27,7 +27,7 @@ import Election.wallet.User;
  *
  * @author manso
  */
-public class ElectionGUI extends javax.swing.JFrame {
+public class Administration extends javax.swing.JFrame {
     public static String fileElection = "Election.obj";
     Election election;
     private User user;
@@ -36,7 +36,7 @@ public class ElectionGUI extends javax.swing.JFrame {
      * Creates new form TemplarCoinGUI
      * @param user
      */
-    public ElectionGUI(User user) {
+    public Administration(User user) {
         initComponents();
         election = new  Election();
         this.user = user;
@@ -44,6 +44,7 @@ public class ElectionGUI extends javax.swing.JFrame {
             election = Election.load(fileElection);
         } catch (Exception e) {
         }
+        txtFrom.setText(user.getName());
         txtLeger.setText(election.toString());
         txtBlochains.setText(election.getSecureLedger().toString());
         setSize(800, 600);
@@ -104,6 +105,7 @@ public class ElectionGUI extends javax.swing.JFrame {
 
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
+        txtFrom.setEditable(false);
         txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
         pnTransaction.add(txtFrom);
@@ -168,7 +170,7 @@ public class ElectionGUI extends javax.swing.JFrame {
             election.save(fileElection);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
-            Logger.getLogger(ElectionGUI.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btRegisterActionPerformed
 

@@ -79,7 +79,7 @@ public class User {
 
     public void save(String password) throws Exception {
         String fileName = getUserFileName(name);
-        PrintStream out = new PrintStream(new FileOutputStream(fileName));
+        PrintStream out = new PrintStream(new FileOutputStream("users/"+fileName));
         out.println(name);
         out.println(Base64.getEncoder().encodeToString(pubKey.getEncoded()));
         byte[] EncodedPW = SecurityUtils.encrypt(privKey.getEncoded(), password);
