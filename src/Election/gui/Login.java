@@ -9,10 +9,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import Election.wallet.User;
+import com.formdev.flatlaf.FlatDarculaLaf;
 import java.util.Arrays;
 import javax.swing.JFileChooser;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
 
 /**
  *
@@ -24,6 +27,13 @@ public class Login extends javax.swing.JFrame {
      * Creates new form Register
      */
     public Login() {
+        
+        try {
+            UIManager.setLookAndFeel(new FlatDarculaLaf());
+        } catch (UnsupportedLookAndFeelException ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         initComponents();
         this.setLocationRelativeTo(null);
         createUsersDirectory();
@@ -39,6 +49,7 @@ public class Login extends javax.swing.JFrame {
     private void initComponents() {
 
         jFileChooser1 = new javax.swing.JFileChooser();
+        jPanel1 = new javax.swing.JPanel();
         btAdministracao = new javax.swing.JButton();
         btLogin1 = new javax.swing.JButton();
         btRegister1 = new javax.swing.JButton();
@@ -47,6 +58,8 @@ public class Login extends javax.swing.JFrame {
         setMinimumSize(new java.awt.Dimension(336, 500));
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
         btAdministracao.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
         btAdministracao.setText("Administração");
         btAdministracao.addActionListener(new java.awt.event.ActionListener() {
@@ -54,7 +67,7 @@ public class Login extends javax.swing.JFrame {
                 btAdministracaoActionPerformed(evt);
             }
         });
-        getContentPane().add(btAdministracao, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 190, 80));
+        jPanel1.add(btAdministracao, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 340, 190, 80));
 
         btLogin1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
         btLogin1.setText("Login");
@@ -63,7 +76,7 @@ public class Login extends javax.swing.JFrame {
                 btLogin1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btLogin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 190, 80));
+        jPanel1.add(btLogin1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 50, 190, 80));
 
         btRegister1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/login.png"))); // NOI18N
         btRegister1.setText("Registo");
@@ -72,7 +85,9 @@ public class Login extends javax.swing.JFrame {
                 btRegister1ActionPerformed(evt);
             }
         });
-        getContentPane().add(btRegister1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 190, 80));
+        jPanel1.add(btRegister1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 190, 190, 80));
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 340, 500));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -261,5 +276,6 @@ public class Login extends javax.swing.JFrame {
     private javax.swing.JButton btLogin1;
     private javax.swing.JButton btRegister1;
     private javax.swing.JFileChooser jFileChooser1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

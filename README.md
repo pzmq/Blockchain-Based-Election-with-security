@@ -26,6 +26,7 @@ On the Votes section you can see the various votes that occurred and in the bloc
 - Only if a Election has started can users access this menu.
 - Only users who did not vote yet can see this GUI.
 - After "Voting" a message saying who voted for who as well as a kick is needed.
+- Missing Dropdown for candidates
 
 ### Administrative Menu
 - Create system where there is a user Administrator that can grant access to the Administrative Menu to certain people based on their keys.
@@ -33,8 +34,16 @@ On the Votes section you can see the various votes that occurred and in the bloc
 - If Election hasn't started be able to start one.
 - Be able to check how many votes in total have been cast, how many per candidate and how many blocks were produced.
 - Be able to check the Blocks and the Merkle Trees in each Block (Not sure if needed).
+- Must be able to run several Elections at the same time.
+- Each Election must have:
+    - Name
+    - Par of Keys (Private and public) 
+    - Start and End Date (Limit user visibility)
 
 ## Project Updates 
+
+### Election Info
+- Added panel to reuse when adding new election to administrative Menu.
 
 ### Administrative Menu
 - Added a new administrative menu for enhanced project management and administration.
@@ -53,5 +62,4 @@ On the Votes section you can see the various votes that occurred and in the bloc
 
 ### Backup Creation
 - Previous data has been backed up before changing with the "_Backup" ending.
-
 

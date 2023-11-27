@@ -15,13 +15,10 @@
 //////////////////////////////////////////////////////////////////////////////
 package Election.gui;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
-import javax.swing.JOptionPane;
 import Election.core.Election;
-import Election.core.Vote;
 import Election.wallet.User;
+import java.time.YearMonth;
+import javax.swing.JComboBox;
 
 /**
  *
@@ -36,19 +33,50 @@ public class Administration extends javax.swing.JFrame {
      * Creates new form TemplarCoinGUI
      * @param user
      */
+    
+    
+    private void atualizarDias() {
+        // Obtém o número de dias do mês selecionado
+        String mesSelecionado = startMonthComboBox.getSelectedItem().toString();
+        String anoSelecionado = startYearComboBox.getSelectedItem().toString();
+        String diaSelecionado = startDayComboBox.getSelectedItem().toString();
+        int numeroDias = YearMonth.of(Integer.valueOf(anoSelecionado), Integer.valueOf(mesSelecionado)).lengthOfMonth();
+        int selectedDayIndex = startDayComboBox.getSelectedIndex();
+        // Popula o JComboBox de dias com os números de 1 ao número de dias do mês
+        String[] dias = new String[numeroDias];
+        for (int i = 0; i < numeroDias; i++) {
+            dias[i] = String.valueOf(i + 1);
+        }
+
+        // Remove os itens antigos e adiciona os novos
+        startDayComboBox.removeAllItems();
+        for (String dia : dias) {
+            startDayComboBox.addItem(dia);
+        }
+        
+        // Mantém o dia selecionado se existir na nova lista
+        if (selectedDayIndex >= 0 && selectedDayIndex < numeroDias) {
+            startDayComboBox.setSelectedIndex(selectedDayIndex);
+        }
+    }
+    
     public Administration(User user) {
+        //Init GUI
         initComponents();
+        atualizarDias();
+        
+        //Init Election
         election = new  Election();
         this.user = user;
         try {
             election = Election.load(fileElection);
         } catch (Exception e) {
         }
-        txtFrom.setText(user.getName());
-        txtLeger.setText(election.toString());
-        txtBlochains.setText(election.getSecureLedger().toString());
+        
         setSize(800, 600);
-        setLocationRelativeTo(null);        
+        setLocationRelativeTo(null);   
+        
+        
     }
 
     /**
@@ -60,127 +88,181 @@ public class Administration extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        jTabbedPane1 = new javax.swing.JTabbedPane();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        txtLeger = new javax.swing.JTextArea();
-        jScrollPane3 = new javax.swing.JScrollPane();
-        txtBlochains = new javax.swing.JTextArea();
-        tpTransaction = new javax.swing.JTabbedPane();
+        tpElection = new javax.swing.JTabbedPane();
         jPanel1 = new javax.swing.JPanel();
-        pnTransaction = new javax.swing.JPanel();
-        txtFrom = new javax.swing.JTextField();
-        txtTo = new javax.swing.JTextField();
-        btRegister = new javax.swing.JButton();
+        jButton_NewElection = new javax.swing.JButton();
+        jTextField_ElectionName = new javax.swing.JTextField();
+        jPanel2 = new javax.swing.JPanel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton1 = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
         jLabel1 = new javax.swing.JLabel();
-        pnUsersBalance = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        lstUsers = new javax.swing.JList<>();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        jLabel6 = new javax.swing.JLabel();
+        startDayComboBox = new javax.swing.JComboBox<>();
+        jLabel3 = new javax.swing.JLabel();
+        startMonthComboBox = new javax.swing.JComboBox<>();
+        jLabel7 = new javax.swing.JLabel();
+        startYearComboBox = new javax.swing.JComboBox<>();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        startDayComboBox1 = new javax.swing.JComboBox<>();
+        jLabel9 = new javax.swing.JLabel();
+        startMonthComboBox1 = new javax.swing.JComboBox<>();
+        jLabel10 = new javax.swing.JLabel();
+        startYearComboBox1 = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Election App");
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtLeger.setColumns(20);
-        txtLeger.setFont(new java.awt.Font("Courier New", 0, 14)); // NOI18N
-        txtLeger.setRows(5);
-        jScrollPane1.setViewportView(txtLeger);
-
-        jTabbedPane1.addTab("Ledger", new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/blockchain.png")), jScrollPane1); // NOI18N
-
-        txtBlochains.setColumns(20);
-        txtBlochains.setRows(5);
-        jScrollPane3.setViewportView(txtBlochains);
-
-        jTabbedPane1.addTab("blockchain", jScrollPane3);
-
-        getContentPane().add(jTabbedPane1, java.awt.BorderLayout.CENTER);
-
-        tpTransaction.addChangeListener(new javax.swing.event.ChangeListener() {
+        tpElection.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                tpTransactionStateChanged(evt);
+                tpElectionStateChanged(evt);
             }
         });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        jPanel1.setLayout(new java.awt.BorderLayout());
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
+        jButton_NewElection.setText("Nova Eleição");
+        jPanel1.add(jButton_NewElection, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, -1));
+        jPanel1.add(jTextField_ElectionName, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 150, -1));
 
-        txtFrom.setEditable(false);
-        txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
-        pnTransaction.add(txtFrom);
+        jPanel2.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidatos"));
+        jPanel2.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+        jPanel2.add(jTextField1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 180, -1));
 
-        txtTo.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtTo.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista"));
-        txtTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtToActionPerformed(evt);
-            }
-        });
-        pnTransaction.add(txtTo);
+        jButton1.setText("Add Candidate");
+        jPanel2.add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 60, -1, -1));
 
-        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/cash-icon.png"))); // NOI18N
-        btRegister.setText("Registar o voto");
-        btRegister.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btRegisterActionPerformed(evt);
-            }
-        });
-        pnTransaction.add(btRegister);
-
-        jPanel1.add(pnTransaction, java.awt.BorderLayout.NORTH);
-
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/templarCoin.png"))); // NOI18N
-        jPanel1.add(jLabel1, java.awt.BorderLayout.CENTER);
-
-        tpTransaction.addTab("Votacao", new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/templar.png")), jPanel1); // NOI18N
-
-        pnUsersBalance.setLayout(new java.awt.BorderLayout());
-
-        lstUsers.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        lstUsers.setModel(new javax.swing.AbstractListModel<String>() {
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(lstUsers);
+        jScrollPane1.setViewportView(jList1);
 
-        pnUsersBalance.add(jScrollPane2, java.awt.BorderLayout.CENTER);
+        jPanel2.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 50, 210, 180));
 
-        tpTransaction.addTab("Votos", new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/users_ledger_24.png")), pnUsersBalance); // NOI18N
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Candidato");
+        jPanel2.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 40, 180, -1));
 
-        getContentPane().add(tpTransaction, java.awt.BorderLayout.WEST);
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel2.setText("Candidatos");
+        jPanel2.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 20, 210, -1));
+
+        jPanel1.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 200, 600, 260));
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel4.setText("Nome da Eleição");
+        jPanel1.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 60, 150, -1));
+
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel6.setText("Fim da Eleição");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 20));
+
+        startDayComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+        jPanel3.add(startDayComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 50, -1));
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel3.setText("/");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 20, 20));
+
+        startMonthComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        startMonthComboBox.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                startMonthComboBoxItemStateChanged(evt);
+            }
+        });
+        startMonthComboBox.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startMonthComboBoxActionPerformed(evt);
+            }
+        });
+        jPanel3.add(startMonthComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 50, -1));
+
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel7.setText("/");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 20, 20));
+
+        startYearComboBox.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", " " }));
+        jPanel3.add(startYearComboBox, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, 70, -1));
+
+        jPanel1.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 160, 380, 30));
+
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Inicio da Eleição");
+        jPanel4.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 150, 20));
+
+        startDayComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+        jPanel4.add(startDayComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 0, 50, -1));
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel9.setText("/");
+        jPanel4.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 0, 20, 20));
+
+        startMonthComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" }));
+        startMonthComboBox1.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                startMonthComboBox1ItemStateChanged(evt);
+            }
+        });
+        startMonthComboBox1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                startMonthComboBox1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(startMonthComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 0, 50, -1));
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel10.setText("/");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 0, 20, 20));
+
+        startYearComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "2023", "2024", "2025", "2026", "2027", "2028", "2029", "2030", "2031", "2032", "2033", " " }));
+        jPanel4.add(startYearComboBox1, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, 70, -1));
+
+        jPanel1.add(jPanel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 120, 350, 30));
+
+        tpElection.addTab("Eleições", jPanel1);
+
+        getContentPane().add(tpElection, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 1386, 690));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtToActionPerformed
-
-    private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
-        try {
-            Vote vote = new Vote(
-                    txtFrom.getText(),
-                    txtTo.getText()
-            );
-            election.add(vote,user);
-            txtLeger.setText(election.toString());
-            txtBlochains.setText(election.getSecureLedger().toString());
-            election.save(fileElection);
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_btRegisterActionPerformed
-
-    private void tpTransactionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpTransactionStateChanged
-        if( tpTransaction.getSelectedComponent()== pnUsersBalance){
+    private void tpElectionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpElectionStateChanged
+        /*if( tpElection.getSelectedComponent()== pnUsersBalance){
             DefaultListModel model = new DefaultListModel();
             model.addAll(election.getCandidateVotes());
-            lstUsers.setModel(model);
-        }
-    }//GEN-LAST:event_tpTransactionStateChanged
+        }*/
+    }//GEN-LAST:event_tpElectionStateChanged
+
+    private void startMonthComboBoxItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_startMonthComboBoxItemStateChanged
+        // TODO add your handling code here:
+        atualizarDias();
+    }//GEN-LAST:event_startMonthComboBoxItemStateChanged
+
+    private void startMonthComboBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMonthComboBoxActionPerformed
+        // TODO add your handling code here:
+        atualizarDias();
+    }//GEN-LAST:event_startMonthComboBoxActionPerformed
+
+    private void startMonthComboBox1ItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_startMonthComboBox1ItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_startMonthComboBox1ItemStateChanged
+
+    private void startMonthComboBox1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_startMonthComboBox1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_startMonthComboBox1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -219,20 +301,31 @@ public class Administration extends javax.swing.JFrame {
 //    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btRegister;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton_NewElection;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JScrollPane jScrollPane2;
-    private javax.swing.JScrollPane jScrollPane3;
-    private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JList<String> lstUsers;
-    private javax.swing.JPanel pnTransaction;
-    private javax.swing.JPanel pnUsersBalance;
-    private javax.swing.JTabbedPane tpTransaction;
-    private javax.swing.JTextArea txtBlochains;
-    private javax.swing.JTextField txtFrom;
-    private javax.swing.JTextArea txtLeger;
-    private javax.swing.JTextField txtTo;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField_ElectionName;
+    private javax.swing.JComboBox<String> startDayComboBox;
+    private javax.swing.JComboBox<String> startDayComboBox1;
+    private javax.swing.JComboBox<String> startMonthComboBox;
+    private javax.swing.JComboBox<String> startMonthComboBox1;
+    private javax.swing.JComboBox<String> startYearComboBox;
+    private javax.swing.JComboBox<String> startYearComboBox1;
+    private javax.swing.JTabbedPane tpElection;
     // End of variables declaration//GEN-END:variables
 }
