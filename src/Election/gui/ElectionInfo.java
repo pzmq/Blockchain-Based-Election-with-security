@@ -26,21 +26,64 @@ public class ElectionInfo extends javax.swing.JPanel {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        VotosCandScroll = new javax.swing.JScrollPane();
+        VotosCandTxT = new javax.swing.JTextPane();
+        NumVotosTotalScroll = new javax.swing.JScrollPane();
+        NumVotosTotalTxT = new javax.swing.JTextPane();
+        ListaCandScroll = new javax.swing.JScrollPane();
+        ListaCandTxT = new javax.swing.JTextPane();
+        VotosEleitorScroll = new javax.swing.JScrollPane();
+        VotosEleitorTxT = new javax.swing.JTextPane();
+
         setMinimumSize(new java.awt.Dimension(670, 460));
+
+        VotosCandScroll.setViewportView(VotosCandTxT);
+
+        NumVotosTotalScroll.setViewportView(NumVotosTotalTxT);
+
+        ListaCandScroll.setViewportView(ListaCandTxT);
+
+        VotosEleitorScroll.setViewportView(VotosEleitorTxT);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 670, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(VotosCandScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 309, Short.MAX_VALUE)
+                    .addComponent(ListaCandScroll))
+                .addGap(18, 18, 18)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(NumVotosTotalScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 331, Short.MAX_VALUE)
+                    .addComponent(VotosEleitorScroll))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 460, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(23, 23, 23)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(VotosCandScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 190, Short.MAX_VALUE)
+                    .addComponent(NumVotosTotalScroll))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 38, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(ListaCandScroll, javax.swing.GroupLayout.DEFAULT_SIZE, 203, Short.MAX_VALUE)
+                    .addComponent(VotosEleitorScroll))
+                .addContainerGap())
         );
     }// </editor-fold>//GEN-END:initComponents
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JScrollPane ListaCandScroll;
+    private javax.swing.JTextPane ListaCandTxT;
+    private javax.swing.JScrollPane NumVotosTotalScroll;
+    private javax.swing.JTextPane NumVotosTotalTxT;
+    private javax.swing.JScrollPane VotosCandScroll;
+    private javax.swing.JTextPane VotosCandTxT;
+    private javax.swing.JScrollPane VotosEleitorScroll;
+    private javax.swing.JTextPane VotosEleitorTxT;
     // End of variables declaration//GEN-END:variables
 }

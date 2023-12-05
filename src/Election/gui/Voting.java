@@ -59,8 +59,8 @@ public class Voting extends javax.swing.JFrame {
     private void initComponents() {
 
         txtFrom = new javax.swing.JTextField();
-        txtTo = new javax.swing.JTextField();
         btRegister = new javax.swing.JButton();
+        candidato = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Election App");
@@ -75,17 +75,8 @@ public class Voting extends javax.swing.JFrame {
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
         getContentPane().add(txtFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 360, 90));
 
-        txtTo.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtTo.setBorder(javax.swing.BorderFactory.createTitledBorder("Lista"));
-        txtTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtToActionPerformed(evt);
-            }
-        });
-        getContentPane().add(txtTo, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 360, 100));
-
-        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/cash-icon.png"))); // NOI18N
-        btRegister.setText("Registar o voto");
+        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/voting-box (Small) (Custom).png"))); // NOI18N
+        btRegister.setText(" Registar Voto");
         btRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRegisterActionPerformed(evt);
@@ -93,19 +84,17 @@ public class Voting extends javax.swing.JFrame {
         });
         getContentPane().add(btRegister, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 340, 360, 110));
 
+        candidato.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        candidato.setName("Candidato"); // NOI18N
+        getContentPane().add(candidato, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 190, 360, 90));
+
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void txtToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtToActionPerformed
-
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
         try {
-            Vote vote = new Vote(
-                    txtFrom.getText(),
-                    txtTo.getText()
-            );
+            Vote vote = new Vote(txtFrom.getText(), (String) candidato.getSelectedItem());
+            
             election.add(vote,user);
             election.save(fileElection);
         } catch (Exception ex) {
@@ -152,7 +141,7 @@ public class Voting extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btRegister;
+    private javax.swing.JComboBox<String> candidato;
     private javax.swing.JTextField txtFrom;
-    private javax.swing.JTextField txtTo;
     // End of variables declaration//GEN-END:variables
 }
