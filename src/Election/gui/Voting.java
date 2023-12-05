@@ -75,7 +75,7 @@ public class Voting extends javax.swing.JFrame {
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
         getContentPane().add(txtFrom, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 60, 360, 90));
 
-        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/voting-box (Small) (Custom).png"))); // NOI18N
+        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/voting-box.png"))); // NOI18N
         btRegister.setText(" Registar Voto");
         btRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
