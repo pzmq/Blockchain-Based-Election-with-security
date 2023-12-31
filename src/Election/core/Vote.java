@@ -17,8 +17,8 @@ package Election.core;
 
 import java.io.Serializable;
 import java.util.Locale;
-import Election.blockchain.Converter;
-import static Election.blockchain.Converter.objectToByteArray;
+import Election.utils.Converter;
+import static Election.utils.Converter.objectToByteArray;
 import Election.wallet.User;
 import Election.utils.SecurityUtils;
 import java.io.IOException;
