@@ -16,6 +16,7 @@
 package Election.distributed;
 
 
+import Election.core.Vote;
 import java.awt.Color;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -73,10 +74,8 @@ public class TemplarCoin extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         pnTransaction = new javax.swing.JPanel();
         txtFrom = new javax.swing.JTextField();
-        txtTo = new javax.swing.JTextField();
-        txtValue = new javax.swing.JTextField();
+        candidatos = new javax.swing.JComboBox<>();
         btRegister = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Miner (c)2023");
@@ -85,7 +84,7 @@ public class TemplarCoin extends javax.swing.JFrame {
 
         pnServer.setLayout(new java.awt.BorderLayout());
 
-        btConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Connect_to_Server.png"))); // NOI18N
+        btConnect.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/Connect_to_Server.png"))); // NOI18N
         btConnect.setText("Connect to Server");
         btConnect.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -145,26 +144,14 @@ public class TemplarCoin extends javax.swing.JFrame {
 
         txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         txtFrom.setText("Ana");
-        txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("From"));
+        txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
         pnTransaction.add(txtFrom);
 
-        txtTo.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtTo.setText("Maria");
-        txtTo.setBorder(javax.swing.BorderFactory.createTitledBorder("to"));
-        txtTo.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtToActionPerformed(evt);
-            }
-        });
-        pnTransaction.add(txtTo);
+        candidatos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Joao", "Toze", "Manuel" }));
+        pnTransaction.add(candidatos);
 
-        txtValue.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtValue.setText("10.5");
-        txtValue.setBorder(javax.swing.BorderFactory.createTitledBorder("Value"));
-        pnTransaction.add(txtValue);
-
-        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/cash-icon.png"))); // NOI18N
-        btRegister.setText("Register");
+        btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/voting-box.png"))); // NOI18N
+        btRegister.setLabel("Votar");
         btRegister.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btRegisterActionPerformed(evt);
@@ -174,10 +161,7 @@ public class TemplarCoin extends javax.swing.JFrame {
 
         jPanel3.add(pnTransaction, java.awt.BorderLayout.NORTH);
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/templarCoin.png"))); // NOI18N
-        jPanel3.add(jLabel1, java.awt.BorderLayout.CENTER);
-
-        tpTransaction.addTab("Transaction", new javax.swing.ImageIcon(getClass().getResource("/images/templar.png")), jPanel3); // NOI18N
+        tpTransaction.addTab("Transaction", new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/templar.png")), jPanel3); // NOI18N
 
         pnTemplarCoin.add(tpTransaction, java.awt.BorderLayout.CENTER);
 
@@ -203,17 +187,12 @@ public class TemplarCoin extends javax.swing.JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_txtAdressActionPerformed
 
-    private void txtToActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtToActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtToActionPerformed
-
     private void btRegisterActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btRegisterActionPerformed
 
         try {
-            Transfer t = new Transfer(
+            Vote t = new Vote(
                     txtFrom.getText(),
-                    txtTo.getText(),
-                    Double.valueOf(txtValue.getText())
+                    candidatos.getSelectedItem().toString()
             );
             remote.addTransaction(t.toText());
         } catch (Exception ex) {
@@ -267,7 +246,7 @@ public class TemplarCoin extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConnect;
     private javax.swing.JButton btRegister;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JComboBox<String> candidatos;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
@@ -283,8 +262,6 @@ public class TemplarCoin extends javax.swing.JFrame {
     private javax.swing.JPanel txtField3;
     private javax.swing.JTextField txtFrom;
     private javax.swing.JTextPane txtLog;
-    private javax.swing.JTextField txtTo;
-    private javax.swing.JTextField txtValue;
     // End of variables declaration//GEN-END:variables
 
     public void onException(String title, Exception ex) {

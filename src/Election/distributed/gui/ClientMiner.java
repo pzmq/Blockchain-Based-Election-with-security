@@ -114,7 +114,7 @@ public class ClientMiner extends javax.swing.JFrame {
 
         jPanel1.add(txtField3, java.awt.BorderLayout.CENTER);
 
-        btConnectToServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Connect_to_Server.png"))); // NOI18N
+        btConnectToServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/Connect_to_Server.png"))); // NOI18N
         btConnectToServer.setText("Connect to Server");
         btConnectToServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -169,7 +169,7 @@ public class ClientMiner extends javax.swing.JFrame {
         jLabel1.setText("Mining");
         jPanel2.add(jLabel1, java.awt.BorderLayout.PAGE_START);
 
-        btMining.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/getNonce48.png"))); // NOI18N
+        btMining.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/getNonce48.png"))); // NOI18N
         btMining.setText("Start");
         btMining.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

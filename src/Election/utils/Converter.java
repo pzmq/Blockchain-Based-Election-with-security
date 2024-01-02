@@ -13,7 +13,7 @@
 //::                                                               (c)2023   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package Election.blockchain;
+package Election.utils;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

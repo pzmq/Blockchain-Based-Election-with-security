@@ -44,9 +44,9 @@ public class Vote implements Serializable {
         return Signature;
     }
 
-    public Vote(String from, String to) {
-        this.voter = from;
-        this.candidate = to;
+    public Vote(String voter, String candidate) {
+        this.voter = voter;
+        this.candidate = candidate;
     }
 
     public String getCandidate() {

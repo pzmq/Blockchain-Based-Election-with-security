@@ -1,91 +1,138 @@
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
-//::                                                                         ::
-//::     Antonio Manuel Rodrigues Manso                                      ::
-//::                                                                         ::
-//::     I N S T I T U T O    P O L I T E C N I C O   D E   T O M A R        ::
-//::     Escola Superior de Tecnologia de Tomar                              ::
-//::     e-mail: manso@ipt.pt                                                ::
-//::     url   : http://orion.ipt.pt/~manso                                  ::
-//::                                                                         ::
-//::     This software was build with the purpose of investigate and         ::
-//::     learning.                                                           ::
-//::                                                                         ::
-//::                                                               (c)2022   ::
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//////////////////////////////////////////////////////////////////////////////
 package Election.blockchain;
 
+import Election.distributed.MinerP2P;
 import java.io.Serializable;
 
-/**
- * Created on 22/08/2022, 09:23:49
- * 
- * Block with consensus of Proof of Work
- *
- * @author IPT - computer
- * @version 1.0
- */
 public class Block implements Serializable {
+    public static int DIFICULTY = 3;
 
-    String previousHash; // link to previous block
-    String MerkleTreeRoot;         // MerkleTreeRoot in the block
-    int nonce;           // proof of work 
-    String currentHash;  // Hash of block
-    MerkleTreeString tree; //MT of block
+    String previous;        // hash do no anterior
+    String data;            // dados 
+    int numberOfZeros = DIFICULTY;  // número de zeros do hash
+    String mkRoot;
+    String hash = "000";     // hash do bloco actual
+    int nonce = 0;          // numero de validação
 
-    public MerkleTreeString getTree() {
-        return tree;
+    /**
+     * cria um bloco
+     *
+     * @param message dados do bloco
+     * @param previous hash do bloco anterior
+     * @param zeros numero de zeros
+     */
+    public Block(String data, String previous,String mkRoot , int zeros) {
+        try {
+            this.data = data;
+            this.previous = previous;
+            this.mkRoot = mkRoot;
+            this.numberOfZeros = zeros;
+            this.nonce = 0;
+            this.hash = MinerP2P.getHash(getMiningData());
+        } catch (Exception ex) {
+        }
     }
-    
-    public String getPreviousHash() {
-        return previousHash;
+
+    /**
+     * para mineração
+     *
+     * @return previous + data + nonce
+     */
+    public final String getMiningData() {
+        return previous + mkRoot + data + numberOfZeros;
     }
 
-    public String getMerkleTreeRoot() {
-        return MerkleTreeRoot;
+    public String getPrevious() {
+        return previous;
     }
 
     public int getNonce() {
         return nonce;
     }
 
-    public String getCurrentHash() {
-        return currentHash;
+    public int getNumberOfZeros() {
+        return numberOfZeros;
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public String getHash() {
+        return hash;
     }
 
-    
-    
-    public Block(String previousHash, String mkroot, MerkleTreeString tree, int nonce) {
-        this.previousHash = previousHash;
-        this.MerkleTreeRoot = mkroot;
+    /**
+     * mensagem do no
+     *
+     * @return
+     */
+    public String getData() {
+        return data;
+    }
+
+    /**
+     * actualiza o nonce do no
+     *
+     * @param nonce novo nonce
+     *
+     */
+    public void setNonce(int nonce) {
         this.nonce = nonce;
-        this.tree = tree;
-        this.currentHash = calculateHash();
+        //calcular o hash
+        this.hash = MinerP2P.getHash(nonce + getMiningData());
     }
 
-    public String calculateHash() {
-        return Hash.getHash(nonce + previousHash + MerkleTreeRoot);
-    }
-
-    public String toString() {
-        return // (isValid() ? "OK\t" : "ERROR\t")+
-                 String.format("[ PrevHash : %8s", previousHash) +
-                   String.format(" Hash : %8s",currentHash) +  String.format("nonce: %7d ] = ", nonce) + 
-                String.format("%-10s", MerkleTreeRoot);
-
-    }
-
+    /**
+     * verify id the block is valid
+     *
+     * @return
+     */
     public boolean isValid() {
-        return currentHash.equals(calculateHash());
+        try {
+            //zeros do prefix
+            String prefix = String.format("%0" + numberOfZeros + "d", 0);
+            if (!hash.startsWith(prefix)) {
+                throw new BlockchainException("Wrong prefix Hash" + hash);
+            }
+            //comparar o hash da mensagem com o hash actual
+            String realHash = MinerP2P.getHash(nonce + getMiningData());
+            if (!realHash.equals(hash)) {
+                throw new BlockchainException("Corrupted data : " + data);
+            }
+            //OK
+            return true;
+        } catch (Exception ex) {
+            return false;
+        }
+    }
+      public String getInfo() {
+        return "Previous:" + previous
+                + "\nData    :" + data
+                + "\nNonce   :" + nonce
+                + "\nHash    :" + hash
+                + "\nNº Zeros:" + numberOfZeros
+                + "\nValid   :" + isValid();
+    }
+      
+
+    @Override
+    public String toString() {
+        return data;
     }
 
-    //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    private static final long serialVersionUID = 202208220923L;
-    //:::::::::::::::::::::::::::  Copyright(c) M@nso  2022  :::::::::::::::::::
-    ///////////////////////////////////////////////////////////////////////////
+  
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof Block) {
+            return hash.equals(((Block) obj).hash);
+        }
+        return false;
+    }
+
+    @Override
+    public int hashCode() {
+        return this.hash.hashCode();
+    }
+
+    public String getTree() {
+        return mkRoot;
+    }
 
 }

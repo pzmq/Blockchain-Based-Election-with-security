@@ -55,9 +55,9 @@ public class Election implements Serializable {
         List<Vote> lst = new ArrayList<>();
         
         for( Block b : secureLedger.getChain()){
-            
-            ArrayList<Vote> votes = (ArrayList<Vote>) b.getTree().getElements();
-            lst.addAll(votes);
+            //b.Tree devolve a mkroot
+            //ArrayList<Vote> votes = (ArrayList<Vote>) b.getTree().getElements();
+            //lst.addAll(votes);
         }
         return lst;
     }

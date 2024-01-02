@@ -147,7 +147,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
         jPanel2.setLayout(new java.awt.GridLayout(1, 0));
 
-        btStartServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/Connect_to_Server.png"))); // NOI18N
+        btStartServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/Connect_to_Server.png"))); // NOI18N
         btStartServer.setText("Start Server");
         btStartServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -166,7 +166,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         pnServer.add(jPanel1, java.awt.BorderLayout.WEST);
 
         runningIcon.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        runningIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/working.gif"))); // NOI18N
+        runningIcon.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/working.gif"))); // NOI18N
         pnServer.add(runningIcon, java.awt.BorderLayout.CENTER);
 
         pnServerMining.add(pnServer, java.awt.BorderLayout.NORTH);
@@ -254,7 +254,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         txtNodeAdress.setBorder(javax.swing.BorderFactory.createEtchedBorder());
         jPanel9.add(txtNodeAdress, java.awt.BorderLayout.CENTER);
 
-        btAddServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/add-server-icon.png"))); // NOI18N
+        btAddServer.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/add-server-icon.png"))); // NOI18N
         btAddServer.setText("Add");
         btAddServer.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -310,7 +310,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         pnLabelCenter.add(jLabel5, java.awt.BorderLayout.NORTH);
 
         jScrollPane7.setMaximumSize(new java.awt.Dimension(300, 900000));
-        jScrollPane7.setOpaque(false);
 
         txtTransaction.setColumns(20);
         txtTransaction.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
@@ -363,7 +362,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         pnLabelCenter1.add(jLabel8, java.awt.BorderLayout.NORTH);
 
         jScrollPane8.setMaximumSize(new java.awt.Dimension(300, 900000));
-        jScrollPane8.setOpaque(false);
 
         txtBlockchain.setColumns(20);
         txtBlockchain.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
@@ -448,12 +446,14 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             txtBlockchain.setText(txt.toString());
         }
     }//GEN-LAST:event_lstBlockchainValueChanged
-
+    
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         try {
             //guardar a blockchain
             myRemote.blockchain.save(BlockChain.DEFAULT_FILENAME);
         } catch (IOException ex) {
+            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (Exception ex) {
             Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_formWindowClosing
@@ -618,9 +618,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             txtNonce.setText(number + "");
         });
     }
+    
 
-    //imagem de quem ganhou
-    private final ImageIcon img = new ImageIcon(getClass().getResource("/images/winner.gif"));
 
     @Override
     public void onNounceFound(int nonce) {
@@ -635,6 +634,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
                     //atualizar o bloco do nodo
                     node.updateMiningBlock(myRemote.miningBlock);
                 }
+                ImageIcon img = new ImageIcon(getClass().getResource("/Images/winner.gif"));
                 GuiUtils.addImage(txtLog, "Winner : " + nonce, img);
                 onMessage("NOUNCE FOUND", nonce + "");
 

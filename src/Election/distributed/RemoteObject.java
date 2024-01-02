@@ -20,7 +20,7 @@ import Election.blockchain.Block;
 import Election.blockchain.BlockChain;
 import Election.blockchain.BlockchainException;
 import Election.blockchain.LastBlock;
-import distributedMiner.transaction.Transactions;
+import Election.blockchain.MerkleTreeString;
 import java.net.InetAddress;
 import java.rmi.RemoteException;
 import java.rmi.server.RemoteServer;
@@ -40,7 +40,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     MiningListener listener;
     MinerP2P myMiner;
-    Transactions transactions;
+    VoteList transactions;
 
     public Block miningBlock; // block in mining process
 
@@ -66,12 +66,15 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             //inicializar nova rede
             network = new CopyOnWriteArrayList<>();
             //inicializar novas transações
-            transactions = new Transactions();
-            this.miningBlock = new Block("dummy", "dummy", 1);
+            transactions = new VoteList();
+             //merkle tree
+            MerkleTreeString tree = new MerkleTreeString(transactions.getList());
+            String root = tree.getRoot();
+            this.miningBlock = new Block("dummy", "dummy",root, 1);
             //inicializar blockchain
             blockchain = new BlockChain();
 
-            listener.onStartServer(utils.RMI.getRemoteName(port, RemoteInterface.OBJECT_NAME));
+            listener.onStartServer(Election.distributed.utils.RMI.getRemoteName(port, RemoteInterface.OBJECT_NAME));
         } catch (Exception e) {
             address = "unknow" + ":" + port;
 
@@ -214,7 +217,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         listener.onUpdateTransactions(transaction);
         listener.onMessage("addTransaction", getClientName());
         //se tiver mais de 4 transacoes e não estiver a minar
-        if (transactions.getList().size() >= 2 && !myMiner.isMining()) {
+        if (transactions.getList().size() >= transactions.MAXVOTELIST && !myMiner.isMining()) {
             buildNewBlock();
         } else {
             //sincronizar a transacao
@@ -273,7 +276,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     @Override
     public void buildNewBlock() throws RemoteException {
-        if (transactions.getList().size() < Transactions.MAXTRANSACTIONS) {
+        if (transactions.getList().size() < VoteList.MAXVOTELIST) {
             return;
         }
         listener.onUpdateBlockchain();
@@ -288,8 +291,14 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
         //dados do bloco são as lista de transaçoes 
         String data = Serializer.objectToBase64(transactions.getList());
+        
+        
+        //merkle tree
+        MerkleTreeString tree = new MerkleTreeString(transactions.getList());
+        String root = tree.getRoot();
+
         //Construir um novo bloco logado ao último
-        Block newBlock = new Block(data, lastHash, Block.DIFICULTY);
+        Block newBlock = new Block(data, lastHash,root, Block.DIFICULTY);
         //Começar a minar o bloco
         startMiningBlock(newBlock);
     }
