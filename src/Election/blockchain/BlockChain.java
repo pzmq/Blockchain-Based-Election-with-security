@@ -41,6 +41,7 @@ public class BlockChain implements Serializable {
 
     ArrayList<Block> chain = new ArrayList<>();
     ArrayList<Vote> tmpVotes = new ArrayList<>();
+    public static String DEFAULT_FILENAME = "blockchain.bl";
     
     Integer maxVotesPerBlock = 5;
     String filename;
@@ -61,7 +62,7 @@ public class BlockChain implements Serializable {
             return String.format("%08d", 0);
         }
         //hash of the last in the list
-        return chain.get(chain.size() - 1).currentHash;
+        return chain.get(chain.size() - 1).hash;
     }
 
     /**
@@ -79,7 +80,7 @@ public class BlockChain implements Serializable {
             if(tmpVotes.size() == maxVotesPerBlock){
                 
                 //Inicializa o bloco
-                addNewBlock(dificulty);
+                //addNewBlock(dificulty);
                 
                 //limpa votos
                 tmpVotes.clear();
@@ -93,37 +94,17 @@ public class BlockChain implements Serializable {
         }
     }
     
-    private void addNewBlock(int dificulty){
-
-        //hash of previous block
-        String prevHash = getLastBlockHash();
-        
-        //Obter Signature e usa a como data da MerkleTree
-        //String data = this.tmpVotes.toString();
-//        ArrayList<String> signatureList = tmpVotes.stream()
-//        .map(vote -> Converter.byteArrayToHex(vote.getSignature()))
-//        .collect(Collectors.toCollection(ArrayList::new));
-//        String concatenatedSignatures = "[" + String.join(", ", signatureList) + "]";
-        String concatenatedSignatures = "[";
-        for(Vote vote : tmpVotes){
-            //vote.toString()
-            concatenatedSignatures += vote.toString()+",";
+    public void addBlock(Block newBlock) throws BlockchainException {
+      //se bão for válido
+        if (!newBlock.isValid()) {
+            throw new BlockchainException("Block corrupted");
         }
-        concatenatedSignatures+= "]";
-        
-        //merkle tree
-        MerkleTreeString tree = new MerkleTreeString(tmpVotes);
-        String root = tree.getRoot();
-        
-        //mining block
-        int nonce = MinerParallel.getNonce(prevHash + concatenatedSignatures, dificulty);
-        
-
-        //build new block
-        Block newBlock = new Block(prevHash, root,tree, nonce);
-
-        //add new block to the chain
-        chain.add(newBlock);
+        //se não encaixar no último
+        if (!newBlock.getPrevious().equals(getLast().getHash())) {
+            throw new BlockchainException("Block does not fit in the last");
+        }
+        //adicionar o bloco
+        this.chain.add(newBlock);
     }
 
     public Block get(int index) {
@@ -185,8 +166,9 @@ public class BlockChain implements Serializable {
         //validate Links
         //starts in the second block
         for (int i = 1; i < chain.size(); i++) {
-            //previous hash !=  hash of previous
-            if (chain.get(i).previousHash != chain.get(i - 1).currentHash) {
+            if (!chain.get(i).isValid() 
+            || !chain.get(i).previous.equals(chain.get(i - 1).hash)) {
+             //blockchain invalida
                 return false;
             }
         }
@@ -197,4 +179,11 @@ public class BlockChain implements Serializable {
     private static final long serialVersionUID = 202208221009L;
     //:::::::::::::::::::::::::::  Copyright(c) M@nso  2022  :::::::::::::::::::
     ///////////////////////////////////////////////////////////////////////////
+
+    public Block getLast() {
+        if(chain.size() > 0){
+            return chain.get(chain.size()-1);
+        }
+        return null;
+    }
 }
