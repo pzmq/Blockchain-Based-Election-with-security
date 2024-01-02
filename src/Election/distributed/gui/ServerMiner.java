@@ -410,7 +410,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         try {
             node = (RemoteInterface) RMI.getRemote(txtNodeAdress.getText());
             myRemote.addNode(node);
-            myRemote.synchonizeTransactions(node.getTransactionsList());
+            myRemote.synchonizeVoteLists(node.getVoteList());
         } catch (Exception ex) {
             onException("Add Node", ex);
         }
@@ -431,7 +431,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
             //bloco selecionado
-            Block b = myRemote.blockchain.getChain().get(lstBlockchain.getSelectedIndex() + 1);
+            Block b = myRemote.blockchains.getChain().get(lstBlockchain.getSelectedIndex() + 1);
             //Lista de transaçoes
             List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
             StringBuilder txt = new StringBuilder(b.getInfo());
@@ -448,14 +448,14 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     }//GEN-LAST:event_lstBlockchainValueChanged
     
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-        try {
-            //guardar a blockchain
-            myRemote.blockchain.save(BlockChain.DEFAULT_FILENAME);
-        } catch (IOException ex) {
-            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (Exception ex) {
-            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
-        }
+//        try {
+//            //guardar a blockchains
+//            //myRemote.blockchains.save(BlockChain.DEFAULT_FILENAME);
+//        } catch (IOException ex) {
+//            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+//        } catch (Exception ex) {
+//            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+//        }
     }//GEN-LAST:event_formWindowClosing
 
     /**
@@ -577,8 +577,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             runningIcon.setVisible(false);
             setTitle(adress);
             onMessage("Server ready", adress);
-            //atualizar as transacoes e a blockchain
-            onUpdateTransactions(null);
+            //atualizar as transacoes e a blockchains
+            onUpdateVotes(null);
             onUpdateBlockchain();
         });
     }
@@ -660,16 +660,15 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
                 onException("Add Node", e);
             }
         });
-
     }
 
     @Override
-    public void onUpdateTransactions(String transaction) {
+    public void onUpdateVotes(String transaction) {
         EventQueue.invokeLater(() -> {
             try {
                 //atualizar os elementos da lista
                 DefaultListModel<String> model = new DefaultListModel<>();
-                model.addAll(myRemote.getTransactionsList());
+                model.addAll(myRemote.getVoteList());
                 lstTransactions.setModel(model);
                 lstTransactions.setSelectedValue(transaction, true);
                 if (transaction != null) {

@@ -61,42 +61,46 @@ public interface RemoteInterface extends Remote {
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
-    //:::::               TRANSACTIONS
+    //:::::               VOTES
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public void addTransaction(String transaction) throws RemoteException;
+    public void addVote(String blockchain, String transaction) throws RemoteException;
+    
+    public void synchonizeAllVoteLists(List<String> list) throws RemoteException;
 
-    public void synchonizeTransactions(List<String> list) throws RemoteException;
+    public void synchonizeVoteLists(String blockchain, List<String> list) throws RemoteException;
 
-    public List<String> getTransactionsList() throws RemoteException;
+    public List<String> getVoteList(String blockchain) throws RemoteException;
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
     //:::::               B L O C K 
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public void startMiningBlock(Block bl) throws RemoteException;
+    public void startMiningBlock(String blockchain, Block bl) throws RemoteException;
 
-    public void updateMiningBlock(Block bl) throws RemoteException;
+    public void updateMiningBlock(String blockchain, Block bl) throws RemoteException;
 
-    public void buildNewBlock() throws RemoteException;
+    public void buildNewBlock(String blockchain) throws RemoteException;
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
     //:::::               B L O C K C H A I N
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public void synchonizeBlockchain(RemoteInterface syncNode) throws RemoteException;
+    public void synchonizeBlockchains(RemoteInterface syncNode) throws RemoteException;
+    
+    public void synchonizeBlockchain(String blockchain,RemoteInterface syncNode) throws RemoteException;
 
-    public int getBlockchainSize() throws RemoteException;
+    public int getBlockchainSize(String blockchain) throws RemoteException;
 
-    public BlockChain getBlockchain() throws RemoteException;
+    public BlockChain getBlockchain(String blockchain) throws RemoteException;
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
     //:::::               C O N S E N S U S
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-    public List getLastBlock(long timeStamp, int dept, int maxDep) throws RemoteException;
+    public List getLastBlock(String blockchain,long timeStamp, int dept, int maxDep) throws RemoteException;
 
 }

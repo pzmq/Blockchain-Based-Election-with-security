@@ -24,6 +24,8 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
@@ -51,15 +53,17 @@ public class Administration extends javax.swing.JFrame {
         //Init GUI
         initComponents();
         setDefaultDateTimeValues();
-
+        
         //Init Election
         election = new Election();
         this.user = user;
+        
         try {
-            election = Election.load(fileElection);
-        } catch (Exception e) {
-        }
-
+            Election.load(fileElection);
+        } catch (Exception ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }   
+    
         setSize(800, 600);
         setLocationRelativeTo(null);
 
@@ -386,6 +390,11 @@ public class Administration extends javax.swing.JFrame {
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jButton_NewElection.setText("Nova Eleição");
+        jButton_NewElection.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton_NewElectionActionPerformed(evt);
+            }
+        });
         jPanel1.add(jButton_NewElection, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 80, -1, -1));
         jPanel1.add(jTextField_ElectionName, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 80, 150, -1));
 
@@ -621,6 +630,13 @@ public class Administration extends javax.swing.JFrame {
         //updateHoursAndMinutes(endHourComboBox, endMinComboBox, endDayComboBox, endMonthComboBox, endYearComboBox, false);
     }//GEN-LAST:event_endDayComboBoxItemStateChanged
 
+    private void jButton_NewElectionActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton_NewElectionActionPerformed
+        // TODO add your handling code here:
+        addNewElection();
+        
+         
+    }//GEN-LAST:event_jButton_NewElectionActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -659,6 +675,19 @@ public class Administration extends javax.swing.JFrame {
     private javax.swing.JComboBox<String> startYearComboBox;
     private javax.swing.JTabbedPane tpElection;
     // End of variables declaration//GEN-END:variables
+
+    private void addNewElection() {
+//        //Init Election
+//        election = new Election();
+//        this.user = user;
+//        
+//        try {
+//            Election.save(fileElection);
+//        } catch (Exception ex) {
+//            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+//        }   
+//    
+    }
 
 
 

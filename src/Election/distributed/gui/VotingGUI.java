@@ -13,9 +13,10 @@
 //::                                                               (c)2021   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 //////////////////////////////////////////////////////////////////////////////
-package Election.distributed;
+package Election.distributed.gui;
 
 
+import Election.distributed.*;
 import Election.core.Vote;
 import java.awt.Color;
 import java.util.logging.Level;
@@ -24,25 +25,34 @@ import javax.swing.JOptionPane;
 
 import Election.distributed.utils.GuiUtils;
 import Election.distributed.utils.RMI;
+import Election.wallet.User;
 
 
 /**
  *
  * @author IPT
  */
-public class TemplarCoin extends javax.swing.JFrame {
+public class VotingGUI extends javax.swing.JFrame {
 
     RemoteInterface remote;
+    User user;
 
     /**
      * Creates new form Test03_GUI_miner
      */
-    public TemplarCoin() {
+     public VotingGUI() {
         initComponents();
         setLocationRelativeTo(null);
     }
     
-    public TemplarCoin(String adress){
+     
+    public VotingGUI(User user) {
+        this.user = user;
+        initComponents();
+        setLocationRelativeTo(null);
+    }
+    
+    public VotingGUI(String adress){
         this();
         txtAdress.setText(adress);
         btConnectActionPerformed(null);
@@ -143,11 +153,12 @@ public class TemplarCoin extends javax.swing.JFrame {
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
         txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtFrom.setText("Ana");
+        txtFrom.setText(user.getName());
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
         pnTransaction.add(txtFrom);
 
         candidatos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Joao", "Toze", "Manuel" }));
+        candidatos.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidatos"));
         pnTransaction.add(candidatos);
 
         btRegister.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Election/multimedia/voting-box.png"))); // NOI18N
@@ -205,43 +216,6 @@ public class TemplarCoin extends javax.swing.JFrame {
     private void tpTransactionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpTransactionStateChanged
 
     }//GEN-LAST:event_tpTransactionStateChanged
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(TemplarCoin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(TemplarCoin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(TemplarCoin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(TemplarCoin.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-
-        //</editor-fold>
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new TemplarCoin().setVisible(true);
-            }
-        });
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConnect;

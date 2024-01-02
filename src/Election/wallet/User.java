@@ -122,14 +122,13 @@ public class User {
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return null;
         }
 
         return new User(name,
                 SecurityUtils.getPublicKey(Base64.getDecoder().decode(pub)),
                 privKey, transactions);
     }
-
- 
 
     public String getName() {
         return name;

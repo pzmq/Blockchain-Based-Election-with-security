@@ -5,7 +5,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class VoteList{ 
 
-    public static int MAXVOTELIST = 2;
+    public static int MAXVOTELIST = 4;
 
     private final List<String> list;
 
@@ -17,23 +17,23 @@ public class VoteList{
         return list;
     }
 
-    public boolean contains(String trans) {
-        return list.contains(trans);
+    public boolean contains(String vote) {
+        return list.contains(vote);
     }
 
-    public void addTransaction(String newTrans) {
-        if (!list.contains(newTrans)) {
-            list.add(newTrans);
+    public void addVote(String newVote) {
+        if (!list.contains(newVote)) {
+            list.add(newVote);
         }
     }
 
-    public void removeTransactions(List<String> lst) {
+    public void removeVotes(List<String> lst) {
         list.removeAll(lst);
     }
 
     public void synchronize(List<String> other) {
-        for (String trans : other) {
-            addTransaction(trans);
+        for (String vote : other) {
+            addVote(vote);
         }
     }
     

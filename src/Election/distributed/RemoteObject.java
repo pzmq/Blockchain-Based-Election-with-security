@@ -27,6 +27,9 @@ import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.ArrayList;
+import java.util.Dictionary;
+import java.util.Enumeration;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,11 +43,11 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     MiningListener listener;
     MinerP2P myMiner;
-    VoteList transactions;
+    Dictionary<String,VoteList> voteList;
 
     public Block miningBlock; // block in mining process
 
-    public BlockChain blockchain;
+    public Dictionary<String,BlockChain> blockchains;
 
     private String address; // nome do servidor
     private List<RemoteInterface> network; // network of miners
@@ -66,13 +69,13 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             //inicializar nova rede
             network = new CopyOnWriteArrayList<>();
             //inicializar novas transações
-            transactions = new VoteList();
+            voteList = new Hashtable<>();
              //merkle tree
-            MerkleTreeString tree = new MerkleTreeString(transactions.getList());
+            MerkleTreeString tree = new MerkleTreeString();
             String root = tree.getRoot();
             this.miningBlock = new Block("dummy", "dummy",root, 1);
-            //inicializar blockchain
-            blockchain = new BlockChain();
+            //inicializar blockchains
+            blockchains  = new Hashtable<>();
 
             listener.onStartServer(Election.distributed.utils.RMI.getRemoteName(port, RemoteInterface.OBJECT_NAME));
         } catch (Exception e) {
@@ -202,48 +205,59 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
-    //:::::               TRANSACTIONS
+    //:::::               VOTES
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     @Override
-    public void addTransaction(String transaction) throws RemoteException {
-        //se já tiver a transação não faz nada
-        if (this.transactions.contains(transaction)) {
-            listener.onMessage("Duplicated Transaction", transaction);
+    public void addVote(String blockchain,String vote) throws RemoteException {
+        //se já tiver o voto não faz nada
+        if (this.voteList.get(blockchain).contains(vote)) {
+            listener.onMessage("Duplicated vote", vote);
             return;
         }
 
-        transactions.addTransaction(transaction);
-        listener.onUpdateTransactions(transaction);
-        listener.onMessage("addTransaction", getClientName());
-        //se tiver mais de 4 transacoes e não estiver a minar
-        if (transactions.getList().size() >= transactions.MAXVOTELIST && !myMiner.isMining()) {
-            buildNewBlock();
+        voteList.get(blockchain).addVote(vote);
+        listener.onUpdateVotes(vote);
+        listener.onMessage("addVote", getClientName());
+        
+        //se tiver mais de 4 votos e não estiver a minar
+        if (voteList.get(blockchain).getList().size() >= voteList.get(blockchain).MAXVOTELIST && !myMiner.isMining()) {
+            buildNewBlock(blockchain);
         } else {
-            //sincronizar a transacao
+            //sincronizar os votos
             for (RemoteInterface node : network) {
-                node.synchonizeTransactions(transactions.getList());
+                node.synchonizeVoteLists(blockchain,voteList.get(blockchain).getList());
             }
         }
 
     }
 
     @Override
-    public List<String> getTransactionsList() throws RemoteException {
-        return transactions.getList();
+    public List<String> getVoteList(String blockchain) throws RemoteException {
+        return voteList.get(blockchain).getList();
     }
 
     @Override
-    public void synchonizeTransactions(List<String> list) throws RemoteException {
-        if (list.equals(transactions.getList())) {
+    public void synchonizeAllVoteLists(List<String> list) throws RemoteException{
+        //se os tamanhos forem diferentes
+        Enumeration<String> keys = voteList.keys();
+        while (keys.hasMoreElements()) { 
+            String blockchain = keys.nextElement();
+            synchonizeVoteLists(blockchain, list);
+        }
+
+    }
+    @Override
+    public void synchonizeVoteLists(String blockchain, List<String> list) throws RemoteException {
+        if (list.equals(voteList.get(blockchain).getList())) {
             return;
         }
         for (String string : list) {
-            addTransaction(string);
+            addVote(blockchain, string);
         }
         //mandar sincronizar a rede
         for (RemoteInterface node : network) {
-            node.synchonizeTransactions(transactions.getList());
+            node.synchonizeVoteLists(blockchain,voteList.get(blockchain).getList());
         }
         listener.onMessage("synchonizeTransactions", getClientName());
 
@@ -255,7 +269,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
     @Override
-    public void startMiningBlock(Block newBlock) throws RemoteException {
+    public void startMiningBlock(String blockchain,Block newBlock) throws RemoteException {
         //se já tiver o bloco
         if (miningBlock.equals(newBlock)) {
             return;
@@ -264,60 +278,60 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         this.miningBlock = newBlock;
         //Remover as transacoes
         List<String> lst = (List<String>) Serializer.base64ToObject(newBlock.getData());
-        this.transactions.removeTransactions(lst);
-        listener.onUpdateTransactions(null);
+        this.voteList.get(blockchain).removeVotes(lst);
+        listener.onUpdateVotes(null);
         //espalhar o bloco pela rede
         for (RemoteInterface node : network) {
-            node.startMiningBlock(miningBlock);
+            node.startMiningBlock(blockchain,miningBlock);
         }
         //minar o bloco
         startMining(newBlock.getMiningData(), newBlock.getNumberOfZeros());
     }
 
     @Override
-    public void buildNewBlock() throws RemoteException {
-        if (transactions.getList().size() < VoteList.MAXVOTELIST) {
+    public void buildNewBlock(String blockchain) throws RemoteException {
+        if (voteList.get(blockchain).getList().size() < VoteList.MAXVOTELIST) {
             return;
         }
         listener.onUpdateBlockchain();
         //espalhar o bloco pela rede
         for (RemoteInterface node : network) {
             listener.onMessage("Synchronize blockchain", node.getAdress());
-            node.synchonizeBlockchain(this);
+            node.synchonizeBlockchain(blockchain, this);
         }
 
-        //String lastHash = blockchain.getLast().getHash();
+        //String lastHash = blockchains.getLast().getHash();
         String lastHash = new LastBlock(this).getLastBlock().getHash();
 
         //dados do bloco são as lista de transaçoes 
-        String data = Serializer.objectToBase64(transactions.getList());
+        String data = Serializer.objectToBase64(voteList.get(blockchain).getList());
         
         
         //merkle tree
-        MerkleTreeString tree = new MerkleTreeString(transactions.getList());
+        MerkleTreeString tree = new MerkleTreeString(voteList.get(blockchain).getList());
         String root = tree.getRoot();
 
         //Construir um novo bloco logado ao último
         Block newBlock = new Block(data, lastHash,root, Block.DIFICULTY);
         //Começar a minar o bloco
-        startMiningBlock(newBlock);
+        startMiningBlock(blockchain, newBlock);
     }
 
     @Override
-    public void updateMiningBlock(Block newBlock) throws RemoteException {
+    public void updateMiningBlock(String blockchain, Block newBlock) throws RemoteException {
         // se o novo bloco for válido
         // e encaixar na minha blochain      
         if (newBlock.isValid()
-                && newBlock.getPrevious().equals(blockchain.getLast().getHash())) {
+                && newBlock.getPrevious().equals(blockchains.get(blockchain).getLast().getHash())) {
             try {
 
-                blockchain.addBlock(newBlock);
+                blockchains.get(blockchain).addBlock(newBlock);
                 this.miningBlock = newBlock;
 
                 listener.onUpdateBlockchain();
                 //espalhar o bloco pela rede
                 for (RemoteInterface node : network) {
-                    node.updateMiningBlock(newBlock);
+                    node.updateMiningBlock(blockchain,newBlock);
                 }
             } catch (BlockchainException ex) {
                 throw new RemoteException("Update mining Block", ex);
@@ -331,33 +345,44 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     @Override
-    public int getBlockchainSize() throws RemoteException {
-        return blockchain.getChain().size();
+    public int getBlockchainSize(String blockchain) throws RemoteException {
+        return blockchains.get(blockchain).getChain().size();
     }
 
     @Override
-    public BlockChain getBlockchain() throws RemoteException {
-        return blockchain;
+    public BlockChain getBlockchain(String blockchain) throws RemoteException {
+        return blockchains.get(blockchain);
 
     }
-
+    
     @Override
-    public void synchonizeBlockchain(RemoteInterface syncNode) throws RemoteException {
+    public void synchonizeBlockchains(RemoteInterface syncNode) throws RemoteException {
         //se os tamanhos forem diferentes
-        if (syncNode.getBlockchainSize() != this.getBlockchainSize()) {
+        Enumeration<String> keys = blockchains.keys();
+        while (keys.hasMoreElements()) { 
+            String name = keys.nextElement();
+            synchonizeBlockchain(name,syncNode);
+        }
+
+    }
+
+    @Override
+    public void synchonizeBlockchain(String blockchain, RemoteInterface syncNode) throws RemoteException {
+        //se os tamanhos forem diferentes
+        if (syncNode.getBlockchainSize(blockchain) != this.getBlockchainSize(blockchain)) {
             //se o meu tamnho for menor
-            if (syncNode.getBlockchainSize() > this.getBlockchainSize()) {
-                //atualizar aminha blockchain
-                listener.onUpdateBlockchain();
-                this.blockchain = syncNode.getBlockchain();
+            if (syncNode.getBlockchainSize(blockchain) > this.getBlockchainSize(blockchain)) {
+                //atualizar aminha blockchains
+                listener.onUpdateBlockchain();          //RECONFIRMAAARRR
+                this.blockchains.put(blockchain, syncNode.getBlockchain(blockchain));
             } else // Se a do no for menor
-            if (syncNode.getBlockchainSize() < this.getBlockchainSize()) {
+            if (syncNode.getBlockchainSize(blockchain) < this.getBlockchainSize(blockchain)) {
                 //sincronizar com a minha
-                syncNode.synchonizeBlockchain(this);
+                syncNode.synchonizeBlockchain(blockchain,this);
             }
-            //sincronizar a blockchain pela rede
+            //sincronizar a blockchains pela rede
             for (RemoteInterface node : network) {
-                node.synchonizeBlockchain(this);
+                node.synchonizeBlockchain(blockchain,this);
             }
         }
 
@@ -366,7 +391,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     Map<Long, Boolean> flagLastBlock = new ConcurrentHashMap<>();
 
     @Override
-    public List getLastBlock(long timeStamp, int dept, int maxDep) throws RemoteException {
+    public List getLastBlock(String blockchain, long timeStamp, int dept, int maxDep) throws RemoteException {
        //codigo com acesso exclusivo  para a thread
         synchronized (this) {
             //verificar se ja respondi
@@ -384,12 +409,12 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         listener.onConsensus("Last Block", address);
         //calcular o ultimo bloco
         List myList = new CopyOnWriteArrayList();
-        myList.add(blockchain.getLast());
+        myList.add(blockchains.get(blockchain).getLast());
         //perguntar à rede
-        //sincronizar a blockchain pela rede
+        //sincronizar a blockchains pela rede
         for (RemoteInterface node : network) {
             listener.onConsensus("Get Last Block Lisr", node.getAdress());
-            List resp = node.getLastBlock(timeStamp, dept + 1, maxDep);
+            List resp = node.getLastBlock(blockchain, timeStamp, dept + 1, maxDep);
             if (resp != null) {
                 myList.addAll(resp);
             }

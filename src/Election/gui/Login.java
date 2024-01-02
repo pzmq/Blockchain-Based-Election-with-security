@@ -4,12 +4,14 @@
  */
 package Election.gui;
 
+import Election.distributed.gui.VotingGUI;
 import java.io.File;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import Election.wallet.User;
 import com.formdev.flatlaf.FlatDarculaLaf;
+import java.io.IOException;
 import java.util.Arrays;
 import javax.swing.JFileChooser;
 import javax.swing.JPasswordField;
@@ -169,14 +171,19 @@ public class Login extends javax.swing.JFrame {
             File selectedFile = fileChooser.getSelectedFile();
             
             String pw = askForPassword(selectedFile);
-            User user;
+            User user = null;
             try {
                 user = User.loadUser(selectedFile.getPath(),pw);
-                System.out.println("Able to decode file!");
-                return user;
+            } catch (IOException ex) {
+                return null;
+                //Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
             } catch (Exception ex) {
-                Logger.getLogger(Login.class.getName()).log(Level.SEVERE, null, ex);
+                return null;
             }
+            
+            return user;
+            
+            
         }
         return null;
     }
@@ -230,8 +237,12 @@ public class Login extends javax.swing.JFrame {
     private void btLogin1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btLogin1ActionPerformed
         // TODO add your handling code here:
         User user = handleLogin();
-        this.setVisible(false);
-        new Voting(user).setVisible(true);
+        if (!(user == null)){
+            this.setVisible(false);
+            new VotingGUI(user).setVisible(true);
+        }else{
+            JOptionPane.showMessageDialog(null, "Senha ou chave privada inválida. Tente novamente.");
+        }
         
     }//GEN-LAST:event_btLogin1ActionPerformed
 
