@@ -1,9 +1,10 @@
 package Election.distributed;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class VoteList{ 
+public class VoteList implements Serializable { 
 
     public static int MAXVOTELIST = 4;
 

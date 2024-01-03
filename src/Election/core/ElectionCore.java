@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Locale;
 import Election.blockchain.Block;
 import Election.blockchain.BlockChain;
+import Election.distributed.VoteList;
 import Election.wallet.User;
 import static Election.wallet.User.getUserFileName;
 import java.io.FileOutputStream;
@@ -20,17 +21,21 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 
-public class Election implements Serializable {
+public class ElectionCore implements Serializable {
 
     private BlockChain secureLedger;
     public int dificulty = 1;
+    public List<String> candidates;
+    public VoteList voteList;
     
     public BlockChain getSecureLedger(){
         return secureLedger;
     }
     
-    public Election() {
-        secureLedger = new BlockChain();    
+    public ElectionCore(List<String> candidates) {
+        secureLedger = new BlockChain();  
+        candidates = candidates;
+        voteList = new VoteList();
     }
 
     public List<Vote> getLedger() {
@@ -43,6 +48,12 @@ public class Election implements Serializable {
         }
         return lst;
     }
+    
+    
+    public boolean voteListContains(String vote) {
+        return voteList.contains(vote);
+    }
+    
     
     /*
     Converter Função para retornar o número de votos de cada Candidato
@@ -79,8 +90,8 @@ public class Election implements Serializable {
         secureLedger.save(fileName);
     }
 
-    public static Election load(String fileName) throws Exception {
-        Election tmp = new Election();
+    public static ElectionCore load(String fileName) throws Exception {
+        ElectionCore tmp = new ElectionCore();
         tmp.secureLedger.load(fileName);
         return tmp;
     }
@@ -103,6 +114,15 @@ public class Election implements Serializable {
             throw new Exception("Voto nao valido");
         }
     }
+
+    public void addVote(String vote) {
+        secureLedger.add(vote,dificulty);  
+    }
+
+    public void updateSecureLedger(BlockChain blockchain) {
+        this.secureLedger = blockchain;
+    }
+
 
     
 

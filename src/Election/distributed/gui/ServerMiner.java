@@ -35,6 +35,7 @@ import Election.distributed.RemoteObject;
 import Election.distributed.VoteList;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 import javax.swing.ImageIcon;
 
 /**
@@ -47,7 +48,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     RemoteObject myRemote;
     VoteList voteList;
     BlockChain chain;
-
+    String election;
+    
     /**
      * Creates new form Test03_GUI_miner
      */
@@ -56,6 +58,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         setLocationRelativeTo(null);
         voteList = new VoteList();
         chain = new BlockChain();
+        election = "teste";
     }
 
     /**
@@ -397,7 +400,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         } catch (Exception e) {
             onException("Start server", e);
         }
-
     }//GEN-LAST:event_btStartServerActionPerformed
 
     private void btAddServerActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btAddServerActionPerformed
@@ -406,7 +408,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         try {
             node = (RemoteInterface) RMI.getRemote(txtNodeAdress.getText());
             myRemote.addNode(node);
-            myRemote.synchronizeAllVoteLists(node.getAllVoteList());
+            myRemote.synchronizeAllVoteLists(node.getAllVoteLists());
         } catch (Exception ex) {
             onException("Add Node", ex);
         }
@@ -419,15 +421,15 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         if (lstTransactions.getSelectedIndex() >= 0) {
             //apresentar a transação
             Transfer t = Transfer.fromText(lstTransactions.getSelectedValue());
-            txtTransaction.setText(t.toString());
+            //txtTransaction.setText(t.toString());
         }
     }//GEN-LAST:event_lstTransactionsValueChanged
 
     private void lstBlockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlockchainValueChanged
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
-            //bloco selecionado --------- QUAL A BLOCKCHAIN
-            Block b = myRemote.blockchains.getChain().get(lstBlockchain.getSelectedIndex() + 1); 
+            //bloco selecionado
+            Block b = myRemote.blockchains.get(lstBlockchain.getSelectedValue()).getChain().get(lstBlockchain.getSelectedIndex() + 1); 
             //Lista de transaçoes
             List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
             StringBuilder txt = new StringBuilder(b.getInfo());
@@ -622,15 +624,15 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
                 //mandar parar a rede
                 for (RemoteInterface node : myRemote.getNetwork()) {
                     onMessage("Abort Miner", node.getAdress());
-                    node.stopMining(nonce);
+                    node.stopMining(election,nonce);
                     //atualizar o bloco do nodo
-                    node.updateMiningBlock(myRemote.miningBlock);
+                    node.updateMiningBlock(election,myRemote.miningBlock);
                 }
                 ImageIcon img = new ImageIcon(getClass().getResource("/Images/winner.gif"));
                 GuiUtils.addImage(txtLog, "Winner : " + nonce, img);
                 onMessage("NOUNCE FOUND", nonce + "");
 
-                myRemote.buildNewBlock();
+                myRemote.buildNewBlock(election);
             } catch (Exception ex) {
                 onException("Nonce Found", ex);
             }
@@ -660,7 +662,18 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             try {
                 //atualizar os elementos da lista
                 DefaultListModel<String> model = new DefaultListModel<>();
-                model.addAll(myRemote.getVoteList());
+                Map<String, VoteList> allVoteLists = myRemote.getAllVoteLists();
+                // Iterar sobre o mapa e adicionar elementos ao modelo
+                for (Map.Entry<String, VoteList> entry : allVoteLists.entrySet()) {
+                    String blockchain = entry.getKey();
+                    VoteList list = entry.getValue();
+
+                    // Iterar sobre a lista retornada por getList() e adicionar elementos formatados ao modelo
+                    for (String voto : list.getList()) {
+                        model.addElement(blockchain + " - " + voto);
+                    }
+                }
+                //model.addAll(myRemote.getAllVoteLists());
                 lstTransactions.setModel(model);
                 lstTransactions.setSelectedValue(transaction, true);
                 if (transaction != null) {
@@ -682,12 +695,12 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
                 //atualizar a lista
                 DefaultListModel<String> model = new DefaultListModel<>();
                 //nao introduzir o primeiro elemento
-                for (int i = 1; i < myRemote.getBlockchainSize(); i++) {
-                    model.addElement(myRemote.getBlockchain().getChain().get(i).getHash());
+                for (int i = 1; i < myRemote.getBlockchainSize(election); i++) {
+                    model.addElement(myRemote.getBlockchain(election).getChain().get(i).getHash());
                 }
                 lstBlockchain.setModel(model);
                 //selecionar o último bloco
-                lstBlockchain.setSelectedValue(myRemote.getBlockchainSize() - 1, true);
+                lstBlockchain.setSelectedValue(myRemote.getBlockchainSize(election) - 1, true);
                 tpMain.setSelectedComponent(pnBlochchain);
             } catch (RemoteException ex) {
                 onException("onReceiveTransaction", ex);

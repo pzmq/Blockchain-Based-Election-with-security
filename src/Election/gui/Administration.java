@@ -15,8 +15,13 @@
 //////////////////////////////////////////////////////////////////////////////
 package Election.gui;
 
-import Election.core.Election;
+import Election.core.ElectionCore;
+import Election.distributed.RemoteInterface;
+import Election.distributed.utils.RMI;
 import Election.wallet.User;
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
@@ -30,6 +35,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.JComboBox;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -38,28 +44,34 @@ import javax.swing.JComboBox;
 public class Administration extends javax.swing.JFrame {
 
     public static String fileElection = "Election.obj";
-    Election election;
+    ElectionCore election;
     private User user;
     private DefaultListModel<String> candidatesListModel;  // Add this line to declare the data model
-
+    RemoteInterface remote;
     /**
      * Creates new form TemplarCoinGUI
      *
      * @param user
      */
     public Administration(User user) {
+        
+        this.user = user;
         candidatesListModel = new DefaultListModel<>();  // Initialize the data model
-
+        
+        try {
+            remote = (RemoteInterface) RMI.getRemote(obterEnderecoRede());
+            
+        } catch (Exception ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
         //Init GUI
         initComponents();
         setDefaultDateTimeValues();
         
-        //Init Election
-        election = new Election();
-        this.user = user;
-        
+        //Init ElectionCore
         try {
-            Election.load(fileElection);
+            ElectionCore.load(fileElection);
         } catch (Exception ex) {
             Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }   
@@ -69,6 +81,28 @@ public class Administration extends javax.swing.JFrame {
 
     }
 
+     private static String obterEnderecoRede() {
+        String enderecoRede = "";
+
+        // Loop até que uma entrada não vazia seja fornecida
+        while (enderecoRede.isEmpty()) {
+            enderecoRede = JOptionPane.showInputDialog(null, "Introduza o endereço da rede:");
+
+            // Verificar se o usuário cancelou a entrada
+            if (enderecoRede == null) {
+                // O usuário pressionou Cancelar, você pode lidar com isso aqui se necessário
+                System.exit(0);
+            }
+
+            // Verificar se a entrada é vazia e exibir uma mensagem de alerta
+            if (enderecoRede.isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Por favor, insira um endereço da rede válido.", "Erro", JOptionPane.ERROR_MESSAGE);
+            }
+        }
+
+        return enderecoRede;
+    }
+     
     private void updateStartDays() {
         updateDaysComboBox(startDayComboBox, startMonthComboBox, startYearComboBox);
     }
@@ -677,12 +711,19 @@ public class Administration extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
 
     private void addNewElection() {
-//        //Init Election
-//        election = new Election();
+//        //Init ElectionCore
+        DefaultListModel model = (DefaultListModel) jList_candidates.getModel();
+        List<String> candidates = new ArrayList<>();
+        for(int i =0; i< model.size(); i++){
+            candidates.add(model.getElementAt(i).toString());
+        }
+        
+        //election = new ElectionCore(candidates);
+        remote.StartNewElection(jTextField_ElectionName.getText(), candidates);
 //        this.user = user;
 //        
 //        try {
-//            Election.save(fileElection);
+//            ElectionCore.save(fileElection);
 //        } catch (Exception ex) {
 //            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
 //        }   

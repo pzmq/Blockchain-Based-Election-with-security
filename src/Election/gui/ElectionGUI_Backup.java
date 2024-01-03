@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
-import Election.core.Election;
 import Election.core.Vote;
 import Election.wallet.User;
 
@@ -29,7 +28,7 @@ import Election.wallet.User;
  */
 public class ElectionGUI_Backup extends javax.swing.JFrame {
     public static String fileElection = "Election.obj";
-    Election election;
+    // election;
     private User user;
     
     /**
@@ -38,15 +37,13 @@ public class ElectionGUI_Backup extends javax.swing.JFrame {
      */
     public ElectionGUI_Backup(User user) {
         initComponents();
-        election = new  Election();
         this.user = user;
         try {
-            election = Election.load(fileElection);
         } catch (Exception e) {
         }
         txtFrom.setText(user.getName());
-        txtLeger.setText(election.toString());
-        txtBlochains.setText(election.getSecureLedger().toString());
+       // txtLeger.setText(election.toString());
+        //txtBlochains.setText(election.getSecureLedger().toString());
         setSize(800, 600);
         setLocationRelativeTo(null);        
     }
@@ -164,10 +161,10 @@ public class ElectionGUI_Backup extends javax.swing.JFrame {
                     txtFrom.getText(),
                     txtTo.getText()
             );
-            election.add(vote,user);
-            txtLeger.setText(election.toString());
-            txtBlochains.setText(election.getSecureLedger().toString());
-            election.save(fileElection);
+           // election.add(vote,user);
+            //txtLeger.setText(election.toString());
+            //txtBlochains.setText(election.getSecureLedger().toString());
+            //election.save(fileElection);
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(this, ex.getMessage());
             Logger.getLogger(ElectionGUI_Backup.class.getName()).log(Level.SEVERE, null, ex);
@@ -177,7 +174,7 @@ public class ElectionGUI_Backup extends javax.swing.JFrame {
     private void tpTransactionStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tpTransactionStateChanged
         if( tpTransaction.getSelectedComponent()== pnUsersBalance){
             DefaultListModel model = new DefaultListModel();
-            model.addAll(election.getCandidateVotes());
+            //model.addAll(election.getCandidateVotes());
             lstUsers.setModel(model);
         }
     }//GEN-LAST:event_tpTransactionStateChanged

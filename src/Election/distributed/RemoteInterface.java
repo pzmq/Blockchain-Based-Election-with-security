@@ -35,9 +35,9 @@ public interface RemoteInterface extends Remote {
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-    public void startMining(String msg, int dificulty) throws RemoteException;
+    public void startMining(String blockchain,String msg, int dificulty) throws RemoteException;
 
-    public void stopMining(int nonce) throws RemoteException;
+    public void stopMining(String blockchain,int nonce) throws RemoteException;
 
     public int getNonce() throws RemoteException;
 
@@ -62,7 +62,7 @@ public interface RemoteInterface extends Remote {
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
-    //:::::               VOTES
+    //:::::                   V O T E S
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public void addVote(String blockchain, String transaction) throws RemoteException;
@@ -71,7 +71,7 @@ public interface RemoteInterface extends Remote {
 
     public void synchronizeVoteList(String blockchain, List<String> list) throws RemoteException;
     
-    public Map<String, VoteList> getAllVoteList() throws RemoteException;
+    public Map<String, VoteList> getAllVoteLists() throws RemoteException;
 
     public List<String> getVoteList(String blockchain) throws RemoteException;
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
@@ -85,6 +85,7 @@ public interface RemoteInterface extends Remote {
     public void updateMiningBlock(String blockchain, Block bl) throws RemoteException;
 
     public void buildNewBlock(String blockchain) throws RemoteException;
+    
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
     //:::::               B L O C K C H A I N
@@ -98,6 +99,19 @@ public interface RemoteInterface extends Remote {
     public int getBlockchainSize(String blockchain) throws RemoteException;
 
     public BlockChain getBlockchain(String blockchain) throws RemoteException;
+    
+    
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    //:::::                                                         :::::::::::::
+    //:::::               E L E C T I O N
+    //:::::                                                         :::::::::::::
+    //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
+    
+    public List<String> getElections () throws RemoteException;
+    
+    public List<String> getCandidates (String election) throws RemoteException;
+    
+    public void StartNewElection(String electionName, List<String> candidates);
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::
@@ -105,5 +119,6 @@ public interface RemoteInterface extends Remote {
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public List getLastBlock(String blockchain,long timeStamp, int dept, int maxDep) throws RemoteException;
+
 
 }

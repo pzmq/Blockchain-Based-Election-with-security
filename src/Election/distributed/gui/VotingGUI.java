@@ -47,9 +47,9 @@ public class VotingGUI extends javax.swing.JFrame {
     }
     
      
-    public VotingGUI(User user, String election) {
+    public VotingGUI(User user) {
         this.user = user;
-        this.election = election;
+        this.election = cb_eleicao.getSelectedItem().toString();
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -233,6 +233,7 @@ public class VotingGUI extends javax.swing.JFrame {
 
     private void cb_eleicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_eleicaoActionPerformed
         // TODO add your handling code here:
+        this.election = cb_eleicao.getSelectedItem().toString();
     }//GEN-LAST:event_cb_eleicaoActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

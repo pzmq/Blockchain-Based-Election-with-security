@@ -239,11 +239,11 @@ public class ClientMiner extends javax.swing.JFrame {
     private void btMiningActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btMiningActionPerformed
         try {
             if (remote.isMining()) {
-                remote.stopMining(99999);
+                //remote.stopMining(99999); ERRO
                 txtData.setEnabled(true);
                 btMining.setText("Start");
             } else {
-                remote.startMining(txtData.getText(), (int) spMyServerPort.getValue());
+                //remote.startMining(txtData.getText(), (int) spMyServerPort.getValue()); ERRO
                 txtData.setEnabled(false);
                 btMining.setText("Stop");
                 new Thread(
