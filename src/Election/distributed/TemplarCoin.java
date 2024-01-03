@@ -34,6 +34,7 @@ public class TemplarCoin extends javax.swing.JFrame {
 
     RemoteInterface remote;
 
+    String eleicao;
     /**
      * Creates new form Test03_GUI_miner
      */
@@ -44,6 +45,7 @@ public class TemplarCoin extends javax.swing.JFrame {
     
     public TemplarCoin(String adress){
         this();
+        eleicao = "teste";
         txtAdress.setText(adress);
         btConnectActionPerformed(null);
         setVisible(true);
@@ -194,7 +196,7 @@ public class TemplarCoin extends javax.swing.JFrame {
                     txtFrom.getText(),
                     candidatos.getSelectedItem().toString()
             );
-            remote.addTransaction(t.toText());
+            remote.addVote(eleicao,t.toText());
         } catch (Exception ex) {
             onException("Add Transaction", ex);
         }

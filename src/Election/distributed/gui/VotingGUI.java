@@ -36,6 +36,7 @@ public class VotingGUI extends javax.swing.JFrame {
 
     RemoteInterface remote;
     User user;
+    String election;
 
     /**
      * Creates new form Test03_GUI_miner
@@ -46,8 +47,9 @@ public class VotingGUI extends javax.swing.JFrame {
     }
     
      
-    public VotingGUI(User user) {
+    public VotingGUI(User user, String election) {
         this.user = user;
+        this.election = election;
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -205,7 +207,7 @@ public class VotingGUI extends javax.swing.JFrame {
                     txtFrom.getText(),
                     candidatos.getSelectedItem().toString()
             );
-            remote.addTransaction(t.toText());
+            remote.addVote(this.election,t.toText());
         } catch (Exception ex) {
             onException("Add Transaction", ex);
         }

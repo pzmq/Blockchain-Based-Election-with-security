@@ -20,6 +20,7 @@ import Election.blockchain.BlockChain;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -66,9 +67,11 @@ public interface RemoteInterface extends Remote {
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     public void addVote(String blockchain, String transaction) throws RemoteException;
     
-    public void synchonizeAllVoteLists(List<String> list) throws RemoteException;
+    public void synchronizeAllVoteLists(Map<String, VoteList> list) throws RemoteException;
 
-    public void synchonizeVoteLists(String blockchain, List<String> list) throws RemoteException;
+    public void synchronizeVoteList(String blockchain, List<String> list) throws RemoteException;
+    
+    public Map<String, VoteList> getAllVoteList() throws RemoteException;
 
     public List<String> getVoteList(String blockchain) throws RemoteException;
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::

@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.Hashtable;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -43,7 +44,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
 
     MiningListener listener;
     MinerP2P myMiner;
-    Dictionary<String,VoteList> voteList;
+    Map<String,VoteList> voteList;
 
     public Block miningBlock; // block in mining process
 
@@ -226,29 +227,36 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         } else {
             //sincronizar os votos
             for (RemoteInterface node : network) {
-                node.synchonizeVoteLists(blockchain,voteList.get(blockchain).getList());
+                node.synchronizeVoteList(blockchain,voteList.get(blockchain).getList());
             }
         }
 
     }
-
+    
+    @Override
+    public Map<String, VoteList> getAllVoteList() throws RemoteException {
+        return voteList;
+    }
     @Override
     public List<String> getVoteList(String blockchain) throws RemoteException {
         return voteList.get(blockchain).getList();
     }
 
     @Override
-    public void synchonizeAllVoteLists(List<String> list) throws RemoteException{
-        //se os tamanhos forem diferentes
-        Enumeration<String> keys = voteList.keys();
-        while (keys.hasMoreElements()) { 
-            String blockchain = keys.nextElement();
-            synchonizeVoteLists(blockchain, list);
+    public void synchronizeAllVoteLists(Map<String, VoteList> list)  throws RemoteException{
+        
+        if(list.equals(voteList)){
+            return;
         }
+        
+        for (Map.Entry<String, VoteList> entry : list.entrySet()) {
+            // Synchronize the vote lists
+            synchronizeVoteList(entry.getKey(),entry.getValue().getList());
 
+        }
     }
     @Override
-    public void synchonizeVoteLists(String blockchain, List<String> list) throws RemoteException {
+    public void synchronizeVoteList(String blockchain, List<String> list) throws RemoteException {
         if (list.equals(voteList.get(blockchain).getList())) {
             return;
         }
@@ -257,7 +265,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         //mandar sincronizar a rede
         for (RemoteInterface node : network) {
-            node.synchonizeVoteLists(blockchain,voteList.get(blockchain).getList());
+            node.synchronizeVoteList(blockchain,voteList.get(blockchain).getList());
         }
         listener.onMessage("synchonizeTransactions", getClientName());
 
@@ -301,7 +309,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
 
         //String lastHash = blockchains.getLast().getHash();
-        String lastHash = new LastBlock(this).getLastBlock().getHash();
+        String lastHash = new LastBlock(this).getLastBlock(blockchain).getHash();
 
         //dados do bloco são as lista de transaçoes 
         String data = Serializer.objectToBase64(voteList.get(blockchain).getList());

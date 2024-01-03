@@ -33,7 +33,7 @@ public class LastBlock {
         this.myNode = myNode;
     }
 
-    public Block getLastBlock() throws RemoteException {
+    public Block getLastBlock(String blockchain) throws RemoteException {
 //        List<Block> lst = new ArrayList<>();
 //        try {
 //            lst.add(myNode.blockchain.getLast());
@@ -43,7 +43,7 @@ public class LastBlock {
 //
 //        } catch (Exception e) {
 //        }
-        List blks = myNode.getLastBlock(new Date().getTime(), 0, 7);
+        List blks = myNode.getLastBlock(blockchain,new Date().getTime(), 0, 7);
 
         return (Block) new Histogram().getMostCommon(blks);
 

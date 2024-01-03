@@ -1,26 +1,6 @@
-//::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::: 
-//::                                                                         ::
-//::     Antonio Manuel Rodrigues Manso                                      ::
-//::                                                                         ::
-//::     I N S T I T U T O    P O L I T E C N I C O   D E   T O M A R        ::
-//::     Escola Superior de Tecnologia de Tomar                              ::
-//::     e-mail: manso@ipt.pt                                                ::
-//::     url   : http://orion.ipt.pt/~manso                                  ::
-//::                                                                         ::
-//::     This software was build with the purpose of investigate and         ::
-//::     learning.                                                           ::
-//::                                                                         ::
-//::                                                               (c)2023   ::
-//:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//////////////////////////////////////////////////////////////////////////////
+
 package Election.distributed;
 
-/**
- * Created on 29/11/2023, 07:47:26
- *
- * @author IPT - computer
- * @version 1.0
- */
 public interface MiningListener {
 
     public void onException(String title, Exception ex);
@@ -45,6 +25,5 @@ public interface MiningListener {
     
     public void onConsensus(String title, String desc);
     
-
 
 }
