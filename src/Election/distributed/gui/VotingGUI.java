@@ -189,7 +189,6 @@ public class VotingGUI extends javax.swing.JFrame {
 
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
-        cb_eleicao.setModel(getElectionList());
         cb_eleicao.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleição"));
         cb_eleicao.setName(""); // NOI18N
         cb_eleicao.addActionListener(new java.awt.event.ActionListener() {
@@ -210,7 +209,6 @@ public class VotingGUI extends javax.swing.JFrame {
         });
         pnTransaction.add(txtFrom);
 
-        candidatos.setModel(getCandidateList());
         candidatos.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidatos"));
         pnTransaction.add(candidatos);
 
@@ -242,6 +240,10 @@ public class VotingGUI extends javax.swing.JFrame {
             setTitle(txtAdress.getText());
             onMessage("Connected to ", txtAdress.getText());
             tpMain.setSelectedComponent( pnTemplarCoin);
+            
+            //setup GUI
+            cb_eleicao.setModel(getElectionList());
+            candidatos.setModel(getCandidateList());
         } catch (Exception e) {
             onException("Connect to server", e);
         }
