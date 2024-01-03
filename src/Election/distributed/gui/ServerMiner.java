@@ -49,9 +49,10 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
      * Creates new form Test03_GUI_miner
      */
     public ServerMiner() {
-        voteList = new VoteList();
-        chain = new BlockChain();
+        //voteList = new VoteList();
+        //chain = new BlockChain();
         election = "teste";
+        myRemote=null;
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -70,10 +71,15 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         btStartServerActionPerformed(null);
         //conectar-se
         btAddServerActionPerformed(null);
+        myRemote=null;
     }
     
-    public DefaultListModel<String> voteList(){
+    public DefaultListModel<String> getVoteList(){
             DefaultListModel<String> model = new DefaultListModel<>();
+        if (myRemote == null){
+            return model;
+        }
+        
         try {
             for (Map.Entry<String, VoteList> votoKeyVal: myRemote.getAllVoteLists().entrySet()){
                 model.addElement(votoKeyVal.getKey());
@@ -328,7 +334,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
         jScrollPane5.setMaximumSize(new java.awt.Dimension(32767, 200));
 
-        lstTransactions.setModel(voteList());
         lstTransactions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstTransactionsValueChanged(evt);
@@ -357,7 +362,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
         jScrollPane6.setMaximumSize(new java.awt.Dimension(32767, 200));
 
-        lstBlockchain.setModel(getElectionList());
         lstBlockchain.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstBlockchainValueChanged(evt);
@@ -413,6 +417,12 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             myRemote = new RemoteObject(port, this);
             RMI.startRemoteObject(myRemote, port, RemoteInterface.OBJECT_NAME);
             btStartServer.setEnabled(false);
+            
+            //Setup the rest of the GUI.
+            lstTransactions.setModel(getVoteList());
+            lstBlockchain.setModel(getElectionList());
+                    
+//            updateBlockChainDetails();
         } catch (Exception e) {
             onException("Start server", e);
         }
@@ -447,25 +457,27 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private void lstBlockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlockchainValueChanged
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
+            updateBlockChainDetails();
+                     
             //bloco selecionado
-            Block b = null; 
-            try {
-                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);
-            } catch (RemoteException ex) {
-                Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //Lista de transaçoes
-            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
-            StringBuilder txt = new StringBuilder(b.getInfo());
-            //iterar as transações
-            for (String string : lst) {
-                //converter transacoes para tranfer
-                Transfer t = (Transfer) Serializer.base64ToObject(string);
-                //adicionar a transfer
-                txt.append("\n:::::::::::::::::\n");
-                txt.append(t.toString()).append("\n");
-            }
-            txtBlockchain.setText(txt.toString());
+//            Block b = null; 
+//            try {
+//                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);
+//            } catch (RemoteException ex) {
+//                Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            //Lista de transaçoes
+//            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
+//            StringBuilder txt = new StringBuilder(b.getInfo());
+//            //iterar as transações
+//            for (String string : lst) {
+//                //converter transacoes para tranfer
+//                Transfer t = (Transfer) Serializer.base64ToObject(string);
+//                //adicionar a transfer
+//                txt.append("\n:::::::::::::::::\n");
+//                txt.append(t.toString()).append("\n");
+//            }
+//            txtBlockchain.setText(txt.toString());
         }
     }//GEN-LAST:event_lstBlockchainValueChanged
     
@@ -737,5 +749,9 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         GuiUtils.addText(txtLog, title, desc, Color.yellow, Color.ORANGE);
                 
      }
+
+    private void updateVoteList() {
+        
+    }
 
 }
