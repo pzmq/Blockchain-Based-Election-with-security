@@ -429,7 +429,12 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
             //bloco selecionado
-            Block b = myRemote.blockchains.get(lstBlockchain.getSelectedValue()).getChain().get(lstBlockchain.getSelectedIndex() + 1); 
+            Block b = null; 
+            try {
+                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);
+            } catch (RemoteException ex) {
+                Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+            }
             //Lista de transaçoes
             List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
             StringBuilder txt = new StringBuilder(b.getInfo());
