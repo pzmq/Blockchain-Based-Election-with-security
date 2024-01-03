@@ -718,8 +718,9 @@ public class Administration extends javax.swing.JFrame {
             candidates.add(model.getElementAt(i).toString());
         }
         
-        //election = new ElectionCore(candidates);
-        remote.StartNewElection(jTextField_ElectionName.getText(), candidates);
+        try {
+            //election = new ElectionCore(candidates);
+            remote.StartNewElection(jTextField_ElectionName.getText(), candidates);
 //        this.user = user;
 //        
 //        try {
@@ -728,6 +729,9 @@ public class Administration extends javax.swing.JFrame {
 //            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
 //        }   
 //    
+        } catch (RemoteException ex) {
+            Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
 
