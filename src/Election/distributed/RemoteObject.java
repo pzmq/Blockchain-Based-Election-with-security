@@ -81,6 +81,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
             //inicializar novas transações
             //voteList = new Hashtable<>();
              //merkle tree
+             elections = new Hashtable<>();
             MerkleTreeString tree = new MerkleTreeString();
             String root = tree.getRoot();
             this.miningBlock = new Block("dummy", "dummy",root, 1);
@@ -248,11 +249,13 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     public Map<String, VoteList> getAllVoteLists() throws RemoteException {
         
         Map<String, VoteList> ret  =new HashMap<>(); 
+        if(elections.isEmpty() ){
+            for (Map.Entry<String, ElectionCore> entry : elections.entrySet()) {
+                ret.put(entry.getKey(), entry.getValue().voteList);
+            }
         
-        for (Map.Entry<String, ElectionCore> entry : elections.entrySet()) {
-            ret.put(entry.getKey(), entry.getValue().voteList);
         }
-        ;
+        
         return ret;
     }
     @Override
@@ -436,7 +439,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     
     
     @Override
-    public void StartNewElection(String electionName, List<String> candidates) {
+    public void StartNewElection(String electionName, List<String> candidates)  throws RemoteException{
         ElectionCore election = new ElectionCore(candidates);
         elections.put(electionName, election);
         //

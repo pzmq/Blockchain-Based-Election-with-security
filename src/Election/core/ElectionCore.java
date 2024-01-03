@@ -32,6 +32,12 @@ public class ElectionCore implements Serializable {
         return secureLedger;
     }
     
+    public ElectionCore() {
+        secureLedger = new BlockChain();  
+        candidates = new ArrayList<>();
+        voteList = new VoteList();
+    }
+    
     public ElectionCore(List<String> candidates) {
         secureLedger = new BlockChain();  
         candidates = candidates;
@@ -91,6 +97,7 @@ public class ElectionCore implements Serializable {
     }
 
     public static ElectionCore load(String fileName) throws Exception {
+        
         ElectionCore tmp = new ElectionCore();
         tmp.secureLedger.load(fileName);
         return tmp;
@@ -115,9 +122,6 @@ public class ElectionCore implements Serializable {
         }
     }
 
-    public void addVote(String vote) {
-        secureLedger.add(vote,dificulty);  
-    }
 
     public void updateSecureLedger(BlockChain blockchain) {
         this.secureLedger = blockchain;

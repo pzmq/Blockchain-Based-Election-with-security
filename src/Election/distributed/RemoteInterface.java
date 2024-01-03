@@ -111,7 +111,7 @@ public interface RemoteInterface extends Remote {
     
     public List<String> getCandidates (String election) throws RemoteException;
     
-    public void StartNewElection(String electionName, List<String> candidates);
+    public void StartNewElection(String electionName, List<String> candidates)  throws RemoteException;
 
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     //:::::                                                         :::::::::::::

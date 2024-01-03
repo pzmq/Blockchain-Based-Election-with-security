@@ -54,11 +54,11 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
      * Creates new form Test03_GUI_miner
      */
     public ServerMiner() {
-        initComponents();
-        setLocationRelativeTo(null);
         voteList = new VoteList();
         chain = new BlockChain();
         election = "teste";
+        initComponents();
+        setLocationRelativeTo(null);
     }
 
     /**
@@ -408,7 +408,10 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         try {
             node = (RemoteInterface) RMI.getRemote(txtNodeAdress.getText());
             myRemote.addNode(node);
-            myRemote.synchronizeAllVoteLists(node.getAllVoteLists());
+            Map<String, VoteList> votos = node.getAllVoteLists();
+            if (votos != null){
+                myRemote.synchronizeAllVoteLists(votos);
+            }
         } catch (Exception ex) {
             onException("Add Node", ex);
         }
