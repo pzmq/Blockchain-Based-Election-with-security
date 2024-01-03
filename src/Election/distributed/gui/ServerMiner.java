@@ -49,8 +49,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
      * Creates new form Test03_GUI_miner
      */
     public ServerMiner() {
-        voteList = new VoteList();
-        chain = new BlockChain();
         election = "teste";
         initComponents();
         setLocationRelativeTo(null);
@@ -447,25 +445,27 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private void lstBlockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlockchainValueChanged
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
-            //bloco selecionado
-            Block b = null; 
-            try {
-                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);
-            } catch (RemoteException ex) {
-                Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            //Lista de transaçoes
-            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
-            StringBuilder txt = new StringBuilder(b.getInfo());
-            //iterar as transações
-            for (String string : lst) {
-                //converter transacoes para tranfer
-                Transfer t = (Transfer) Serializer.base64ToObject(string);
-                //adicionar a transfer
-                txt.append("\n:::::::::::::::::\n");
-                txt.append(t.toString()).append("\n");
-            }
-            txtBlockchain.setText(txt.toString());
+            updateBlockChainDetails();
+            
+//            //bloco selecionado
+//            Block b = null; 
+//            try {
+//                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);
+//            } catch (RemoteException ex) {
+//                Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+//            }
+//            //Lista de transaçoes
+//            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
+//            StringBuilder txt = new StringBuilder(b.getInfo());
+//            //iterar as transações
+//            for (String string : lst) {
+//                //converter transacoes para tranfer
+//                Transfer t = (Transfer) Serializer.base64ToObject(string);
+//                //adicionar a transfer
+//                txt.append("\n:::::::::::::::::\n");
+//                txt.append(t.toString()).append("\n");
+//            }
+//            txtBlockchain.setText(txt.toString());
         }
     }//GEN-LAST:event_lstBlockchainValueChanged
     
