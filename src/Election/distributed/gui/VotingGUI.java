@@ -12,10 +12,11 @@
 //::                                                                         ::
 //::                                                               (c)2021   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 package Election.distributed.gui;
 
 
+import Election.blockchain.Block;
 import Election.distributed.*;
 import Election.core.Vote;
 import java.awt.Color;
@@ -26,6 +27,11 @@ import javax.swing.JOptionPane;
 import Election.distributed.utils.GuiUtils;
 import Election.distributed.utils.RMI;
 import Election.wallet.User;
+import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.ComboBoxModel;
+import javax.swing.DefaultListModel;
 
 
 /**
@@ -59,6 +65,34 @@ public class VotingGUI extends javax.swing.JFrame {
         txtAdress.setText(adress);
         btConnectActionPerformed(null);
         setVisible(true);
+    }
+    
+    public ComboBoxModel<String> getElectionList(){
+        List<String> listaElections = null;
+        try {
+            listaElections = remote.getElections();
+        } catch (RemoteException ex) {
+            Logger.getLogger(VotingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (String election: listaElections){
+            model.addElement(election);
+        }
+        return (ComboBoxModel<String>) model;
+    }
+    
+    public ComboBoxModel<String> getCandidateList(){
+        List<String> listaCandidates = null;
+        try {
+            listaCandidates = remote.getCandidates(election);
+        } catch (RemoteException ex) {
+            Logger.getLogger(VotingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (String candidato: listaCandidates){
+            model.addElement(candidato);
+        }
+        return (ComboBoxModel<String>) model;
     }
 
     /**
@@ -155,8 +189,8 @@ public class VotingGUI extends javax.swing.JFrame {
 
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
-        cb_eleicao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Eleição 1", "Eleição 2", "Eleição 3", "Eleição 4" }));
-        cb_eleicao.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        cb_eleicao.setModel(getElectionList());
+        cb_eleicao.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleição"));
         cb_eleicao.setName(""); // NOI18N
         cb_eleicao.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -164,14 +198,19 @@ public class VotingGUI extends javax.swing.JFrame {
             }
         });
         pnTransaction.add(cb_eleicao);
-        cb_eleicao.getAccessibleContext().setAccessibleName("Eleição");
+        cb_eleicao.getAccessibleContext().setAccessibleName("");
 
         txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         txtFrom.setText(user.getName());
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
+        txtFrom.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtFromActionPerformed(evt);
+            }
+        });
         pnTransaction.add(txtFrom);
 
-        candidatos.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Joao", "Toze", "Manuel" }));
+        candidatos.setModel(getCandidateList());
         candidatos.setBorder(javax.swing.BorderFactory.createTitledBorder("Candidatos"));
         pnTransaction.add(candidatos);
 
@@ -186,11 +225,11 @@ public class VotingGUI extends javax.swing.JFrame {
 
         jPanel3.add(pnTransaction, java.awt.BorderLayout.NORTH);
 
-        tpTransaction.addTab("Transaction", jPanel3);
+        tpTransaction.addTab("Voting", jPanel3);
 
         pnTemplarCoin.add(tpTransaction, java.awt.BorderLayout.CENTER);
 
-        tpMain.addTab("Templar Coin", pnTemplarCoin);
+        tpMain.addTab("Election", pnTemplarCoin);
 
         getContentPane().add(tpMain, java.awt.BorderLayout.CENTER);
 
@@ -235,6 +274,10 @@ public class VotingGUI extends javax.swing.JFrame {
         // TODO add your handling code here:
         this.election = cb_eleicao.getSelectedItem().toString();
     }//GEN-LAST:event_cb_eleicaoActionPerformed
+
+    private void txtFromActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtFromActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtFromActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConnect;

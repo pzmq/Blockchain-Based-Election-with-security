@@ -12,11 +12,10 @@
 //::                                                                         ::
 //::                                                               (c)2021   ::
 //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-//////////////////////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////////////////
 package Election.distributed.gui;
 
 import Election.distributed.utils.RMI;
-import Election.distributed.utils.Serializer;
 import Election.distributed.utils.GuiUtils;
 import Election.distributed.Transfer;
 import java.awt.Color;
@@ -33,8 +32,6 @@ import Election.distributed.MiningListener;
 import Election.distributed.RemoteInterface;
 import Election.distributed.RemoteObject;
 import Election.distributed.VoteList;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Map;
 import javax.swing.ImageIcon;
 
@@ -46,8 +43,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
     //Objeto remoto
     RemoteObject myRemote;
-    VoteList voteList;
-    BlockChain chain;
     String election;
     
     /**
@@ -56,8 +51,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     public ServerMiner() {
         initComponents();
         setLocationRelativeTo(null);
-        voteList = new VoteList();
-        chain = new BlockChain();
         election = "teste";
     }
 
@@ -75,26 +68,47 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         btStartServerActionPerformed(null);
         //conectar-se
         btAddServerActionPerformed(null);
-        voteList = new VoteList();
-        chain = new BlockChain();
     }
     
     public DefaultListModel<String> voteList(){
-        List<String> listaVotos = voteList.getList();
+            DefaultListModel<String> model = new DefaultListModel<>();
+        try {
+            for (Map.Entry<String, VoteList> votoKeyVal: myRemote.getAllVoteLists().entrySet()){
+                model.addElement(votoKeyVal.getKey());
+                for(String voto: votoKeyVal.getValue().getList()){
+                    model.addElement(votoKeyVal.getKey() + "->" + voto);
+                }
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            return model;
+    }
+
+    public DefaultListModel<String> getElectionList(){
+        List<String> listaElections = null;
+        try {
+            listaElections = myRemote.getElections();
+        } catch (RemoteException ex) {
+            Logger.getLogger(VotingGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         DefaultListModel<String> model = new DefaultListModel<>();
-        for (String voto: listaVotos){
-            model.addElement(voto);
+        for (String election: listaElections){
+            model.addElement(election);
         }
         return model;
     }
-
-    public DefaultListModel<String> chainList(){
-        ArrayList<Block> listaBlocos = chain.getChain();
-        DefaultListModel<String> model = new DefaultListModel<>();
-        for (Block bloco: listaBlocos){
-            model.addElement(bloco.getHash());
+    
+    public void updateBlockChainDetails(){
+        BlockChain chain = null;
+        try {
+            chain = myRemote.getBlockchain(lstBlockchain.getSelectedValue());
+        } catch (RemoteException ex) {
+            Logger.getLogger(ServerMiner.class.getName()).log(Level.SEVERE, null, ex);
         }
-        return model;
+        for (Block bloco: chain.getChain()){
+            txtBlockchain.append(bloco.getInfo());
+        }
     }
 
     /**
@@ -335,13 +349,13 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         pnLabelLeft1.setLayout(new java.awt.BorderLayout());
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel7.setText("Blockchain");
+        jLabel7.setText("Election");
         jLabel7.setPreferredSize(new java.awt.Dimension(200, 16));
         pnLabelLeft1.add(jLabel7, java.awt.BorderLayout.NORTH);
 
         jScrollPane6.setMaximumSize(new java.awt.Dimension(32767, 200));
 
-        lstBlockchain.setModel(chainList());
+        lstBlockchain.setModel(getElectionList());
         lstBlockchain.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstBlockchainValueChanged(evt);
@@ -428,20 +442,22 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private void lstBlockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlockchainValueChanged
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
-            //bloco selecionado
-            Block b = myRemote.blockchains.get(lstBlockchain.getSelectedValue()).getChain().get(lstBlockchain.getSelectedIndex() + 1); 
-            //Lista de transaçoes
-            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
-            StringBuilder txt = new StringBuilder(b.getInfo());
-            //iterar as transações
-            for (String string : lst) {
-                //converter transacoes para tranfer
-                Transfer t = (Transfer) Serializer.base64ToObject(string);
-                //adicionar a transfer
-                txt.append("\n:::::::::::::::::\n");
-                txt.append(t.toString()).append("\n");
-            }
-            txtBlockchain.setText(txt.toString());
+            updateBlockChainDetails();
+            
+//            //bloco selecionado
+//            Block b = myRemote.blockchains.get(lstBlockchain.getSelectedValue()).getChain().get(lstBlockchain.getSelectedIndex() + 1); 
+//            //Lista de transaçoes
+//            List<String> lst = (List<String>) Serializer.base64ToObject(b.getData());
+//            StringBuilder txt = new StringBuilder(b.getInfo());
+//            //iterar as transações
+//            for (String string : lst) {
+//                //converter transacoes para tranfer
+//                Transfer t = (Transfer) Serializer.base64ToObject(string);
+//                //adicionar a transfer
+//                txt.append("\n:::::::::::::::::\n");
+//                txt.append(t.toString()).append("\n");
+//            }
+//            txtBlockchain.setText(txt.toString());
         }
     }//GEN-LAST:event_lstBlockchainValueChanged
     

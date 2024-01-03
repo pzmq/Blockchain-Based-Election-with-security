@@ -160,8 +160,8 @@
         <Container class="javax.swing.JPanel" name="pnTemplarCoin">
           <Constraints>
             <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-              <JTabbedPaneConstraints tabName="Templar Coin">
-                <Property name="tabTitle" type="java.lang.String" value="Templar Coin"/>
+              <JTabbedPaneConstraints tabName="Election">
+                <Property name="tabTitle" type="java.lang.String" value="Election"/>
               </JTabbedPaneConstraints>
             </Constraint>
           </Constraints>
@@ -199,8 +199,8 @@
                   </Properties>
                   <Constraints>
                     <Constraint layoutClass="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout" value="org.netbeans.modules.form.compat2.layouts.support.JTabbedPaneSupportLayout$JTabbedPaneConstraintsDescription">
-                      <JTabbedPaneConstraints tabName="Transaction">
-                        <Property name="tabTitle" type="java.lang.String" value="Transaction"/>
+                      <JTabbedPaneConstraints tabName="Voting">
+                        <Property name="tabTitle" type="java.lang.String" value="Voting"/>
                       </JTabbedPaneConstraints>
                     </Constraint>
                   </Constraints>
@@ -223,23 +223,16 @@
                       <SubComponents>
                         <Component class="javax.swing.JComboBox" name="cb_eleicao">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="4">
-                                <StringItem index="0" value="Elei&#xe7;&#xe3;o 1"/>
-                                <StringItem index="1" value="Elei&#xe7;&#xe3;o 2"/>
-                                <StringItem index="2" value="Elei&#xe7;&#xe3;o 3"/>
-                                <StringItem index="3" value="Elei&#xe7;&#xe3;o 4"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getElectionList()" type="code"/>
                             </Property>
-                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
-                              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
-                                <TitledBorder/>
-                              </Border>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Elei&#xe7;&#xe3;o&quot;)" type="code"/>
                             </Property>
                             <Property name="name" type="java.lang.String" value="" noResource="true"/>
                           </Properties>
                           <AccessibilityProperties>
-                            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value="Elei&#xe7;&#xe3;o"/>
+                            <Property name="AccessibleContext.accessibleName" type="java.lang.String" value=""/>
                           </AccessibilityProperties>
                           <Events>
                             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="cb_eleicaoActionPerformed"/>
@@ -262,15 +255,14 @@
                               </Border>
                             </Property>
                           </Properties>
+                          <Events>
+                            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtFromActionPerformed"/>
+                          </Events>
                         </Component>
                         <Component class="javax.swing.JComboBox" name="candidatos">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-                              <StringArray count="3">
-                                <StringItem index="0" value="Joao"/>
-                                <StringItem index="1" value="Toze"/>
-                                <StringItem index="2" value="Manuel"/>
-                              </StringArray>
+                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
+                              <Connection code="getCandidateList()" type="code"/>
                             </Property>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
