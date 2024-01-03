@@ -32,7 +32,9 @@ import Election.blockchain.BlockChain;
 import Election.distributed.MiningListener;
 import Election.distributed.RemoteInterface;
 import Election.distributed.RemoteObject;
+import Election.distributed.VoteList;
 import java.io.IOException;
+import java.util.ArrayList;
 import javax.swing.ImageIcon;
 
 /**
@@ -43,6 +45,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
     //Objeto remoto
     RemoteObject myRemote;
+    VoteList voteList;
+    BlockChain chain;
 
     /**
      * Creates new form Test03_GUI_miner
@@ -50,6 +54,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     public ServerMiner() {
         initComponents();
         setLocationRelativeTo(null);
+        voteList = new VoteList();
+        chain = new BlockChain();
     }
 
     /**
@@ -66,6 +72,26 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         btStartServerActionPerformed(null);
         //conectar-se
         btAddServerActionPerformed(null);
+        voteList = new VoteList();
+        chain = new BlockChain();
+    }
+    
+    public DefaultListModel<String> voteList(){
+        List<String> listaVotos = voteList.getList();
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (String voto: listaVotos){
+            model.addElement(voto);
+        }
+        return model;
+    }
+
+    public DefaultListModel<String> chainList(){
+        ArrayList<Block> listaBlocos = chain.getChain();
+        DefaultListModel<String> model = new DefaultListModel<>();
+        for (Block bloco: listaBlocos){
+            model.addElement(bloco.getHash());
+        }
+        return model;
     }
 
     /**
@@ -114,10 +140,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         jLabel6 = new javax.swing.JLabel();
         jScrollPane5 = new javax.swing.JScrollPane();
         lstTransactions = new javax.swing.JList<>();
-        pnLabelCenter = new javax.swing.JPanel();
-        jLabel5 = new javax.swing.JLabel();
-        jScrollPane7 = new javax.swing.JScrollPane();
-        txtTransaction = new javax.swing.JTextArea();
         pnBlochchain = new javax.swing.JPanel();
         pnBlockchianTop1 = new javax.swing.JPanel();
         pnLabelLeft1 = new javax.swing.JPanel();
@@ -281,17 +303,13 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         pnLabelLeft.setLayout(new java.awt.BorderLayout());
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Transactions");
+        jLabel6.setText("Lista de Votos");
         jLabel6.setPreferredSize(new java.awt.Dimension(200, 16));
         pnLabelLeft.add(jLabel6, java.awt.BorderLayout.NORTH);
 
         jScrollPane5.setMaximumSize(new java.awt.Dimension(32767, 200));
 
-        lstTransactions.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lstTransactions.setModel(voteList());
         lstTransactions.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstTransactionsValueChanged(evt);
@@ -303,28 +321,9 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
         pnBlockchianTop.add(pnLabelLeft);
 
-        pnLabelCenter.setLayout(new java.awt.BorderLayout());
-
-        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("Details");
-        pnLabelCenter.add(jLabel5, java.awt.BorderLayout.NORTH);
-
-        jScrollPane7.setMaximumSize(new java.awt.Dimension(300, 900000));
-
-        txtTransaction.setColumns(20);
-        txtTransaction.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
-        txtTransaction.setRows(5);
-        txtTransaction.setMaximumSize(new java.awt.Dimension(300, 900000));
-        txtTransaction.setOpaque(false);
-        jScrollPane7.setViewportView(txtTransaction);
-
-        pnLabelCenter.add(jScrollPane7, java.awt.BorderLayout.CENTER);
-
-        pnBlockchianTop.add(pnLabelCenter);
-
         pnTransaction.add(pnBlockchianTop, java.awt.BorderLayout.CENTER);
 
-        tpMain.addTab("Transactions", pnTransaction);
+        tpMain.addTab("Votos", pnTransaction);
 
         pnBlochchain.setLayout(new java.awt.BorderLayout());
 
@@ -339,11 +338,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
         jScrollPane6.setMaximumSize(new java.awt.Dimension(32767, 200));
 
-        lstBlockchain.setModel(new javax.swing.AbstractListModel<String>() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public String getElementAt(int i) { return strings[i]; }
-        });
+        lstBlockchain.setModel(chainList());
         lstBlockchain.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 lstBlockchainValueChanged(evt);
@@ -398,6 +393,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
             int port = (int) spMyServerPort.getValue();
             myRemote = new RemoteObject(port, this);
             RMI.startRemoteObject(myRemote, port, RemoteInterface.OBJECT_NAME);
+            btStartServer.setEnabled(false);
         } catch (Exception e) {
             onException("Start server", e);
         }
@@ -502,7 +498,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
@@ -518,14 +513,12 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane5;
     private javax.swing.JScrollPane jScrollPane6;
-    private javax.swing.JScrollPane jScrollPane7;
     private javax.swing.JScrollPane jScrollPane8;
     private javax.swing.JList<String> lstBlockchain;
     private javax.swing.JList<String> lstTransactions;
     private javax.swing.JPanel pnBlochchain;
     private javax.swing.JPanel pnBlockchianTop;
     private javax.swing.JPanel pnBlockchianTop1;
-    private javax.swing.JPanel pnLabelCenter;
     private javax.swing.JPanel pnLabelCenter1;
     private javax.swing.JPanel pnLabelLeft;
     private javax.swing.JPanel pnLabelLeft1;
@@ -548,7 +541,6 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
     private javax.swing.JTextArea txtNetwork;
     private javax.swing.JTextField txtNodeAdress;
     private javax.swing.JTextField txtNonce;
-    private javax.swing.JTextArea txtTransaction;
     // End of variables declaration//GEN-END:variables
 
     @Override

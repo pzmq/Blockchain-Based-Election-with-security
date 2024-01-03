@@ -85,6 +85,7 @@ public class VotingGUI extends javax.swing.JFrame {
         tpTransaction = new javax.swing.JTabbedPane();
         jPanel3 = new javax.swing.JPanel();
         pnTransaction = new javax.swing.JPanel();
+        cb_eleicao = new javax.swing.JComboBox<>();
         txtFrom = new javax.swing.JTextField();
         candidatos = new javax.swing.JComboBox<>();
         btRegister = new javax.swing.JButton();
@@ -154,6 +155,17 @@ public class VotingGUI extends javax.swing.JFrame {
 
         pnTransaction.setLayout(new java.awt.GridLayout(4, 1, 5, 5));
 
+        cb_eleicao.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Eleição 1", "Eleição 2", "Eleição 3", "Eleição 4" }));
+        cb_eleicao.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        cb_eleicao.setName(""); // NOI18N
+        cb_eleicao.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cb_eleicaoActionPerformed(evt);
+            }
+        });
+        pnTransaction.add(cb_eleicao);
+        cb_eleicao.getAccessibleContext().setAccessibleName("Eleição");
+
         txtFrom.setFont(new java.awt.Font("Courier New", 1, 14)); // NOI18N
         txtFrom.setText(user.getName());
         txtFrom.setBorder(javax.swing.BorderFactory.createTitledBorder("Eleitor"));
@@ -219,10 +231,15 @@ public class VotingGUI extends javax.swing.JFrame {
 
     }//GEN-LAST:event_tpTransactionStateChanged
 
+    private void cb_eleicaoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cb_eleicaoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cb_eleicaoActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btConnect;
     private javax.swing.JButton btRegister;
     private javax.swing.JComboBox<String> candidatos;
+    private javax.swing.JComboBox<String> cb_eleicao;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel3;
