@@ -458,8 +458,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         //se estiver algo selecionado
         if (lstBlockchain.getSelectedIndex() >= 0) {
             updateBlockChainDetails();
-                     
-            //bloco selecionado
+            
+//            //bloco selecionado
 //            Block b = null; 
 //            try {
 //                b = myRemote.getBlockchain( lstBlockchain.getSelectedValue()).get(lstBlockchain.getSelectedIndex() + 1);

@@ -223,9 +223,6 @@
                       <SubComponents>
                         <Component class="javax.swing.JComboBox" name="cb_eleicao">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="getElectionList()" type="code"/>
-                            </Property>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
                               <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Elei&#xe7;&#xe3;o&quot;)" type="code"/>
                             </Property>
@@ -261,9 +258,6 @@
                         </Component>
                         <Component class="javax.swing.JComboBox" name="candidatos">
                           <Properties>
-                            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="getCandidateList()" type="code"/>
-                            </Property>
                             <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
                               <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
                                 <TitledBorder title="Candidatos"/>
