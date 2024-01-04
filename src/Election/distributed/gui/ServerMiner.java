@@ -456,8 +456,10 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
 
     private void lstBlockchainValueChanged(javax.swing.event.ListSelectionEvent evt) {//GEN-FIRST:event_lstBlockchainValueChanged
         //se estiver algo selecionado
+            System.out.println("TESTEE");
         if (lstBlockchain.getSelectedIndex() >= 0) {
             updateBlockChainDetails();
+            System.out.println("TESTEE111");
             
 //            //bloco selecionado
 //            Block b = null; 
@@ -731,12 +733,13 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
                 //atualizar a lista
                 DefaultListModel<String> model = new DefaultListModel<>();
                 //nao introduzir o primeiro elemento
-                for (int i = 1; i < myRemote.getBlockchainSize(election); i++) {
-                    model.addElement(myRemote.getBlockchain(election).getChain().get(i).getHash());
+                for (String name : myRemote.getElections()) {
+                    model.addElement(name);
                 }
                 lstBlockchain.setModel(model);
                 //selecionar o último bloco
-                lstBlockchain.setSelectedValue(myRemote.getBlockchainSize(election) - 1, true);
+                lstBlockchain.setSelectedValue(lstBlockchain.getModel().getElementAt(0), true);
+                
                 tpMain.setSelectedComponent(pnBlochchain);
             } catch (RemoteException ex) {
                 onException("onReceiveTransaction", ex);
@@ -749,9 +752,8 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         GuiUtils.addText(txtLog, title, desc, Color.yellow, Color.ORANGE);
                 
      }
+    
 
-    private void updateVoteList() {
-        
-    }
+
 
 }

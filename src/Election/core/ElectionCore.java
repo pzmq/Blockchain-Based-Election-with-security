@@ -37,10 +37,14 @@ public class ElectionCore implements Serializable {
         candidates = new ArrayList<>();
         voteList = new VoteList();
     }
+
+    public List<String> getCandidates() {
+        return candidates;
+    }
     
     public ElectionCore(List<String> candidates) {
         secureLedger = new BlockChain();  
-        candidates = candidates;
+        this.candidates = candidates;
         voteList = new VoteList();
     }
 

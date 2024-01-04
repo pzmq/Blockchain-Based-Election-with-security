@@ -223,8 +223,10 @@
                       <SubComponents>
                         <Component class="javax.swing.JComboBox" name="cb_eleicao">
                           <Properties>
-                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.RADConnectionPropertyEditor">
-                              <Connection code="javax.swing.BorderFactory.createTitledBorder(&quot;Elei&#xe7;&#xe3;o&quot;)" type="code"/>
+                            <Property name="border" type="javax.swing.border.Border" editor="org.netbeans.modules.form.editors2.BorderEditor">
+                              <Border info="org.netbeans.modules.form.compat2.border.TitledBorderInfo">
+                                <TitledBorder title="Elei&#xe7;&#xe3;o"/>
+                              </Border>
                             </Property>
                             <Property name="name" type="java.lang.String" value="" noResource="true"/>
                           </Properties>

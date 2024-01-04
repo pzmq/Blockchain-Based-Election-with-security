@@ -71,7 +71,7 @@ public class Administration extends javax.swing.JFrame {
         
         //Init ElectionCore
         try {
-            ElectionCore.load(fileElection);
+        //    ElectionCore.load(fileElection);
         } catch (Exception ex) {
             Logger.getLogger(Administration.class.getName()).log(Level.SEVERE, null, ex);
         }   

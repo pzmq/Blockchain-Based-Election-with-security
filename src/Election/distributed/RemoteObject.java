@@ -249,7 +249,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     public Map<String, VoteList> getAllVoteLists() throws RemoteException {
         
         Map<String, VoteList> ret  =new HashMap<>(); 
-        if(elections.isEmpty() ){
+        if(!elections.isEmpty() ){
             for (Map.Entry<String, ElectionCore> entry : elections.entrySet()) {
                 ret.put(entry.getKey(), entry.getValue().voteList);
             }
@@ -279,8 +279,11 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     }
     @Override
     public void synchronizeVoteList(String blockchain, List<String> list) throws RemoteException {
-        VoteList voteList = elections.get(blockchain).voteList;
-        if (list.equals(voteList.getList())) {
+        if (elections.size() <= 0){
+            
+        }
+        List<String> voteList = elections.get(blockchain).voteList.getList();
+        if (list.equals(voteList)) {
             return;
         }
         for (String string : list) {
@@ -288,8 +291,9 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
         //mandar sincronizar a rede
         for (RemoteInterface node : network) {
-            node.synchronizeVoteList(blockchain,voteList.getList());
+            node.synchronizeVoteList(blockchain,voteList);
         }
+        
         listener.onMessage("synchonizeTransactions", getClientName());
 
     }
@@ -427,22 +431,30 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     //:::::                                                         :::::::::::::
     //:::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
     
+    @Override
     public List<String> getElections () throws RemoteException{
         return new ArrayList<>(elections.keySet());
     }
-            
-    
+           
+    @Override
     public List<String> getCandidates (String election) throws RemoteException{
-        
-        return candidates.get(election);
+        return elections.get(election).getCandidates();
     }
     
     
     @Override
     public void StartNewElection(String electionName, List<String> candidates)  throws RemoteException{
+        if(elections.containsKey(electionName)){
+            return;
+        }
+        
         ElectionCore election = new ElectionCore(candidates);
         elections.put(electionName, election);
-        //
+        for (RemoteInterface node : network) {
+            listener.onMessage("Synchronize blockchain", node.getAdress());
+            node.StartNewElection(electionName, candidates);
+        }
+        listener.onUpdateBlockchain();
     }
 
     

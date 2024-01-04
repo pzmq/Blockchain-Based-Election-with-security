@@ -31,6 +31,7 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ComboBoxModel;
+import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 
 
@@ -55,7 +56,6 @@ public class VotingGUI extends javax.swing.JFrame {
      
     public VotingGUI(User user) {
         this.user = user;
-        this.election = cb_eleicao.getSelectedItem().toString();
         initComponents();
         setLocationRelativeTo(null);
     }
@@ -67,7 +67,7 @@ public class VotingGUI extends javax.swing.JFrame {
         setVisible(true);
     }
     
-    public ComboBoxModel<String> getElectionList(){
+    public DefaultListModel<String> getElectionList(){
         List<String> listaElections = null;
         try {
             listaElections = remote.getElections();
@@ -78,10 +78,10 @@ public class VotingGUI extends javax.swing.JFrame {
         for (String election: listaElections){
             model.addElement(election);
         }
-        return (ComboBoxModel<String>) model;
+        return model;
     }
     
-    public ComboBoxModel<String> getCandidateList(){
+    public DefaultListModel<String> getCandidateList(){
         List<String> listaCandidates = null;
         try {
             listaCandidates = remote.getCandidates(election);
@@ -92,7 +92,7 @@ public class VotingGUI extends javax.swing.JFrame {
         for (String candidato: listaCandidates){
             model.addElement(candidato);
         }
-        return (ComboBoxModel<String>) model;
+        return model;
     }
 
     /**
@@ -241,9 +241,18 @@ public class VotingGUI extends javax.swing.JFrame {
             onMessage("Connected to ", txtAdress.getText());
             tpMain.setSelectedComponent( pnTemplarCoin);
             
+            DefaultListModel<String> elections = getElectionList();
+            
             //setup GUI
-            cb_eleicao.setModel(getElectionList());
-            candidatos.setModel(getCandidateList());
+            cb_eleicao.setModel(new DefaultComboBoxModel(elections.toArray()));
+            
+            if(elections.size() >0){
+                election = cb_eleicao.getSelectedItem().toString();
+                DefaultListModel<String> candidates = getCandidateList();
+                candidatos.setModel(new DefaultComboBoxModel(candidates.toArray()));
+                
+            }
+            
         } catch (Exception e) {
             onException("Connect to server", e);
         }
