@@ -306,7 +306,7 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
     @Override
     public void startMiningBlock(String blockchain,Block newBlock) throws RemoteException {
         //se já tiver o bloco
-        if (miningBlock.equals(newBlock)) {
+        if (miningBlock != null && miningBlock.equals(newBlock)) {
             return;
         }
         listener.onMessage("New Mining Block", newBlock.getHash() + "");
@@ -337,7 +337,8 @@ public class RemoteObject extends UnicastRemoteObject implements RemoteInterface
         }
 
         //String lastHash = blockchains.getLast().getHash();
-        String lastHash = new LastBlock(this).getLastBlock(blockchain).getHash();
+        //String lastHash = new LastBlock(this).getLastBlock(blockchain).getHash();
+        String lastHash = elections.get(blockchain).getSecureLedger().getLastBlockHash();
 
         //dados do bloco são as lista de transaçoes 
         String data = Serializer.objectToBase64(voteList.getList());

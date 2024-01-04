@@ -269,6 +269,7 @@ public class VotingGUI extends javax.swing.JFrame {
                     txtFrom.getText(),
                     candidatos.getSelectedItem().toString()
             );
+            t.SignVote(user);
             remote.addVote(this.election,t.toText());
         } catch (Exception ex) {
             onException("Add Transaction", ex);

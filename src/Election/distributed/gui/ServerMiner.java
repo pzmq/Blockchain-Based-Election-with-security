@@ -449,7 +449,7 @@ public class ServerMiner extends javax.swing.JFrame implements MiningListener {
         //se estiver algo selecionado
         if (lstTransactions.getSelectedIndex() >= 0) {
             //apresentar a transação
-            Transfer t = Transfer.fromText(lstTransactions.getSelectedValue());
+            // t = Transfer.fromText(lstTransactions.getSelectedValue());
             //txtTransaction.setText(t.toString());
         }
     }//GEN-LAST:event_lstTransactionsValueChanged
